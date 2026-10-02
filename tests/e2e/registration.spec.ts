@@ -58,6 +58,8 @@ test('timeout after commit survives refresh and retry does not duplicate the res
   await expect(status.getByRole('status')).toHaveText('Registro pendente.');
   const id = await matchId(page);
   await page.reload();
+  await expect(page.getByRole('button', { name: 'Jogar', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Último resultado', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Seu navio afundou.' })).toBeVisible();
   await expect(status.getByRole('status')).toHaveText('Registro pendente.');
   await setScenario(page, 'success');
@@ -80,8 +82,8 @@ test('new games remain available with multiple pending matches and recovery regi
   await expect(page.getByRole('region', { name: 'Registro da partida' }).getByRole('status')).toHaveText('Registro pendente.');
   await expect(page.locator('.pending-panel li')).toHaveCount(2);
   await page.reload();
+  await expect(page.getByRole('button', { name: 'Jogar', exact: true })).toBeVisible();
   await expect(page.locator('.pending-panel li')).toHaveCount(2);
-  await expect(page.getByRole('region', { name: 'Registro da partida' }).getByRole('status')).toHaveText('Registro pendente.');
   await setScenario(page, 'success');
   await page.getByRole('button', { name: 'Tentar todas novamente', exact: true }).click();
   await expect(page.locator('.pending-panel')).toHaveCount(0);

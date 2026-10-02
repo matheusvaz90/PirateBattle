@@ -3,7 +3,10 @@ export interface Point {
   readonly y: number;
 }
 
-export type NavigationTarget = Point;
+export interface NavigationTarget extends Point {
+  readonly autoAdvance: boolean;
+  readonly steeringScale: number;
+}
 
 export interface BaseGameOptions {
   readonly sessionTime: number;

@@ -77,11 +77,13 @@ test('focus loss pauses and requires an explicit resume', async ({ page }) => {
   expect((await snapshot(page)).status).toBe('running');
 });
 
-test('timeout restores the result after refresh and restart creates a clean ship', async ({ page }) => {
+test('refresh opens the menu while the persisted timeout result can restart a clean ship', async ({ page }) => {
   await startControlledGame(page);
   await advance(page, 120);
   await expect(page.getByRole('heading', { name: 'De volta ao porto.' })).toBeVisible();
   await page.reload();
+  await expect(page.getByRole('button', { name: 'Jogar', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Último resultado', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'De volta ao porto.' })).toBeVisible();
   await page.getByRole('button', { name: 'Jogar novamente', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();
@@ -95,19 +97,26 @@ test('timeout restores the result after refresh and restart creates a clean ship
   expect(restarted.cooldowns).toEqual({ front: 0, left: 0, right: 0 });
 });
 
-test('pointer controls move the ship and release stops movement', async ({ page }) => {
+test('mouse steers the ship while forward input controls movement', async ({ page }) => {
   await startControlledGame(page);
   const arena = await page.getByTestId('arena').boundingBox();
   if (!arena) throw new Error('The arena is not visible.');
-  await page.mouse.move(arena.x + arena.width * 0.75, arena.y + arena.height * 0.7);
-  await page.mouse.down();
   const before = await snapshot(page);
+  await page.mouse.move(arena.x + arena.width * 0.75, arena.y + arena.height * 0.7);
   await advance(page, 0.5);
-  await page.mouse.up();
+  const steered = await snapshot(page);
+  expect(steered.player.x).toBe(before.player.x);
+  expect(steered.player.y).toBe(before.player.y);
+  expect(steered.player.heading).not.toBe(before.player.heading);
+  await page.keyboard.down('w');
+  await advance(page, 0.5);
+  await page.keyboard.up('w');
   const moved = await snapshot(page);
-  expect(Math.hypot(moved.player.x - before.player.x, moved.player.y - before.player.y)).toBeGreaterThan(0);
+  expect(Math.hypot(moved.player.x - steered.player.x, moved.player.y - steered.player.y)).toBeGreaterThan(0);
   await advance(page, 0.5);
-  expect((await snapshot(page)).player).toEqual(moved.player);
+  const stopped = await snapshot(page);
+  expect(stopped.player.x).toBe(moved.player.x);
+  expect(stopped.player.y).toBe(moved.player.y);
 });
 
 test('front fire uses real input and repeats only after its cooldown', async ({ page }) => {
@@ -191,7 +200,7 @@ test('paused shots and weapon cooldowns remain frozen and do not replay old fire
 });
 
 test('two touch pointers can move and fire together and release clears movement', async ({ page, context }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile-chromium', 'Touch controls are presented on coarse pointers.');
+  test.skip(!testInfo.project.name.startsWith('mobile-'), 'Touch controls are presented on coarse pointers.');
   await startControlledGame(page);
   const arena = await page.getByTestId('arena').boundingBox();
   const fire = await page.getByRole('button', { name: 'Atirar à frente', exact: true }).boundingBox();
@@ -301,7 +310,7 @@ test('both enemy types move around the island without crossing it', async ({ pag
   expect(passed.has('shooter')).toBe(true);
 });
 
-test('death shows and persists the result and Play Again resets health and score', async ({ page }) => {
+test('death persists while refresh opens the menu and Play Again resets health and score', async ({ page }) => {
   await startControlledGame(page, 'death-contact');
   await advance(page, 0.5);
   await expect(page.getByRole('heading', { name: 'Seu navio afundou.' })).toBeVisible();
@@ -313,6 +322,8 @@ test('death shows and persists the result and Play Again resets health and score
   });
   expect(result).toContain('"endReason":"death"');
   await page.reload();
+  await expect(page.getByRole('button', { name: 'Jogar', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Último resultado', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Seu navio afundou.' })).toBeVisible();
   await page.getByRole('button', { name: 'Jogar novamente', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();

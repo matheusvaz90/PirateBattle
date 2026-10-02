@@ -20,9 +20,7 @@ export function App() {
   const [options, setOptions] = useState(initialStorage.options.value);
   const [soundEnabled, setSoundEnabled] = useState(initialStorage.audio.value);
   const [lastResult, setLastResult] = useState(initialStorage.result.value);
-  const [screen, setScreen] = useState<Screen>(() => initialStorage.result.value
-    ? { type: 'result', result: initialStorage.result.value }
-    : { type: 'menu' });
+  const [screen, setScreen] = useState<Screen>({ type: 'menu' });
   const [notice, setNotice] = useState<string | null>(initialStorage.options.error ?? initialStorage.result.error ?? initialStorage.audio.error);
   const mainRef = useRef<HTMLElement>(null);
 
@@ -102,7 +100,7 @@ export function App() {
             </div>
           </section>
           <section className="control-guide" id="comando" aria-labelledby="controls-heading">
-             <div><p className="eyebrow"><span />DOMINE O CONVÉS</p><h2 id="controls-heading">Você está no comando.</h2><p>Segure e mova o ponteiro sobre o mar para navegar. No celular, arraste sobre a arena e use os canhões na tela.</p></div>
+             <div><p className="eyebrow"><span />DOMINE O CONVÉS</p><h2 id="controls-heading">Você está no comando.</h2><p>No computador, mova o mouse para guiar e segure W para avançar. No celular, arraste sobre a arena e use o deck de canhões abaixo dela.</p></div>
             <dl className="key-guide">
                <div><dt><kbd>W</kbd> / <kbd>↑</kbd></dt><dd>Avançar</dd></div>
                <div><dt><kbd>A</kbd> <kbd>D</kbd></dt><dd>Virar à esquerda / direita</dd></div>

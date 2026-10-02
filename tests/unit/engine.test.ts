@@ -59,10 +59,10 @@ test('movement cannot leave the visible arena', () => {
   assert.equal(game.getWorld().player.x, config.arena.width - config.player.radius);
 });
 
-test('navigation target turns and moves the ship until input is released', () => {
+test('automatic navigation target turns and moves the ship until input is released', () => {
   const game = engine();
   const before = game.getWorld().player;
-  game.setNavigationTarget({ x: before.x + 300, y: before.y + 180 });
+  game.setNavigationTarget({ x: before.x + 300, y: before.y + 180, autoAdvance: true, steeringScale: 1 });
   game.advance(0.5);
   const moving = game.getWorld().player;
   assert.ok(moving.x > before.x);
@@ -73,9 +73,24 @@ test('navigation target turns and moves the ship until input is released', () =>
   assert.deepEqual(game.getWorld().player, moving);
 });
 
+test('manual navigation target steers without moving until forward input is held', () => {
+  const game = engine();
+  const before = game.getWorld().player;
+  game.setNavigationTarget({ x: before.x, y: before.y + 300, autoAdvance: false, steeringScale: 0.8 });
+  game.advance(FIXED_STEP);
+  const steered = game.getWorld().player;
+  assert.equal(steered.x, before.x);
+  assert.equal(steered.y, before.y);
+  assert.ok(Math.abs(steered.heading - game.config.player.rotationSpeed * 0.8 * FIXED_STEP) < 1e-8);
+  game.setActions(new Set(['moveForward']));
+  game.advance(0.5);
+  const moved = game.getWorld().player;
+  assert.ok(Math.hypot(moved.x - steered.x, moved.y - steered.y) > 0);
+});
+
 test('pause clears navigation target and resume cannot replay it', () => {
   const game = engine();
-  game.setNavigationTarget({ x: 500, y: 500 });
+  game.setNavigationTarget({ x: 500, y: 500, autoAdvance: true, steeringScale: 1 });
   game.advance(0.1);
   game.pause();
   const paused = game.getWorld().player;

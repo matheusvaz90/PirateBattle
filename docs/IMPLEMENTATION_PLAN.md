@@ -13,7 +13,7 @@ O agente implementa e executa as verificações isoladas/estáticas permitidas. 
 - O PixiJS 8 controla os objetos visuais e projeta o estado do motor. Não há wrapper React para Pixi.
 - O menu usa React/CSS e assets estáticos oficiais; gameplay e indicadores permanecem integralmente no PixiJS.
 - A Web Audio API reproduz os WAV fornecidos a partir de eventos tipados do motor. A preferência de som não altera a configuração da partida.
-- Teclado e botões de ataque compartilham ações tipadas; o gesto sobre a arena fornece um destino tipado ao motor, com origens rastreadas de forma independente.
+- Teclado e botões de ataque compartilham ações tipadas; mouse e toque fornecem um destino tipado com propulsão manual ou automática, mantendo as origens de entrada independentes.
 - Snapshots do React são atualizados apenas em mudanças significativas, não a cada frame.
 - Passo fixo de simulação: 1/60 de segundo. Pausar limpa as entradas e o acumulador.
 - Arena lógica: 1280 × 720, dimensionada com letterbox. O redimensionamento nunca altera as regras.
@@ -31,7 +31,7 @@ Configuração, scripts, assets, navegação mínima, carregamento/erro/nova ten
 
 ### 2. Navegação jogável
 
-Motor/configuração tipados, loop fixo, movimento, rotação, limites, uma ilha, teclado, destino por gesto com múltiplos ponteiros para navegação/ataque, redimensionamento, observação exclusiva de teste e relógio controlado. O usuário testa movimento em curva, contato com obstáculos, contato com bordas e layout móvel. Publicar snapshots apenas quando o estado exibido mudar.
+Motor/configuração tipados, loop fixo, movimento, rotação, limites, uma ilha, teclado, leme por mouse com propulsão por W, destino automático por toque com múltiplos ponteiros para navegação/ataque, redimensionamento, observação exclusiva de teste e relógio controlado. O usuário testa movimento em curva, contato com obstáculos, contato com bordas e layout móvel. Publicar snapshots apenas quando o estado exibido mudar.
 
 ### 3. Combate
 
@@ -45,7 +45,7 @@ Perseguição/contato e autodestruição do Chaser sem pontuação; aproximaçã
 
 ### 5. Produto e opções
 
-Opções persistentes validadas, configuração independente por partida, menus/instruções, último resultado persistido, HUD semântico, diálogos/foco/mensagens de erro acessíveis e controles móveis em paisagem. Tente um deploy antecipado autorizado e verifique os caminhos reais dos assets e o Service Worker antes da entrega final.
+Opções persistentes validadas, configuração independente por partida, menus/instruções, último resultado persistido acessível a partir do menu, inicialização previsível no menu, HUD semântico, diálogos/foco/mensagens de erro acessíveis e controles móveis em retrato/paisagem. Tente um deploy antecipado autorizado e verifique os caminhos reais dos assets e o Service Worker antes da entrega final.
 
 ### 6. Ranking e histórico
 

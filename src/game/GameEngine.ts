@@ -85,10 +85,12 @@ export class GameEngine {
       this.navigationTarget = null;
       return;
     }
-    if (!Number.isFinite(target.x) || !Number.isFinite(target.y)) return;
+    if (!Number.isFinite(target.x) || !Number.isFinite(target.y) || !Number.isFinite(target.steeringScale) || target.steeringScale <= 0) return;
     this.navigationTarget = {
       x: Math.max(this.config.player.radius, Math.min(this.config.arena.width - this.config.player.radius, target.x)),
       y: Math.max(this.config.player.radius, Math.min(this.config.arena.height - this.config.player.radius, target.y)),
+      autoAdvance: target.autoAdvance,
+      steeringScale: Math.min(1, target.steeringScale),
     };
   }
 
@@ -182,20 +184,23 @@ export class GameEngine {
     const dt = Math.min(FIXED_STEP, this.config.sessionTime - this.activeDuration);
     const previousPlayer = { x: this.x, y: this.y };
     const previousEnemies = new Map(this.enemies.map((enemy) => [enemy.id, { x: enemy.x, y: enemy.y }]));
-    const manualNavigation = this.actions.has('moveForward') || this.actions.has('turnLeft') || this.actions.has('turnRight');
     const turn = Number(this.actions.has('turnRight')) - Number(this.actions.has('turnLeft'));
-    let moveForward = this.actions.has('moveForward');
-    if (this.navigationTarget && !manualNavigation) {
+    let moveForward = this.actions.has('moveForward') || this.navigationTarget?.autoAdvance === true;
+    if (this.navigationTarget && turn === 0) {
       const dx = this.navigationTarget.x - this.x;
       const dy = this.navigationTarget.y - this.y;
       const distance = Math.hypot(dx, dy);
-      if (distance <= this.config.player.radius) this.navigationTarget = null;
-      else {
+      if (distance <= this.config.player.radius) {
+        if (this.navigationTarget.autoAdvance) {
+          this.navigationTarget = null;
+          moveForward = this.actions.has('moveForward');
+        }
+      } else {
         const desired = Math.atan2(dy, dx);
         const delta = Math.atan2(Math.sin(desired - this.heading), Math.cos(desired - this.heading));
-        const rotation = Math.max(-this.config.player.rotationSpeed * dt, Math.min(this.config.player.rotationSpeed * dt, delta));
+        const rotationSpeed = this.config.player.rotationSpeed * this.navigationTarget.steeringScale;
+        const rotation = Math.max(-rotationSpeed * dt, Math.min(rotationSpeed * dt, delta));
         this.heading += rotation;
-        moveForward = true;
       }
     } else {
       this.heading += turn * this.config.player.rotationSpeed * dt;

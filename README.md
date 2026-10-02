@@ -60,7 +60,7 @@ Não abra `index.html` diretamente: o projeto precisa do servidor Vite para reso
 
 Conecte o celular e o computador à mesma rede Wi-Fi. Com `npm run dev` em execução, abra no celular a URL de **Network** exibida pelo Vite. `localhost` no celular se refere ao próprio celular, não ao computador.
 
-Use a orientação paisagem. Segure e arraste sobre o mar para navegar; o barco segue o dedo com a velocidade, rotação e colisões normais e para quando o toque termina. Os botões de canhão sobre a arena aceitam pressionamentos simultâneos. Se a URL de rede estiver inacessível, verifique o firewall do computador e se a rede Wi-Fi permite a comunicação entre dispositivos.
+Retrato e paisagem são suportados, mas a orientação paisagem oferece uma arena maior. Segure e arraste sobre o mar para navegar; o barco segue o dedo com a velocidade, rotação e colisões normais e para quando o toque termina. O deck de canhões abaixo da arena aceita pressionamentos simultâneos sem cobrir a batalha. Se a URL de rede estiver inacessível, verifique o firewall do computador e se a rede Wi-Fi permite a comunicação entre dispositivos.
 
 Para ter suporte confiável a Service Worker em um celular físico, use a versão publicada com HTTPS. Um endereço HTTP simples da rede local pode não oferecer suporte ao worker simulado; a interface informa erros de configuração da API, e a jogabilidade continua disponível. Localhost e HTTPS são os ambientes de referência para as APIs.
 
@@ -68,14 +68,14 @@ Para ter suporte confiável a Service Worker em um celular físico, use a versã
 
 | Ação | Teclado | Ponteiro/toque |
 | --- | --- | --- |
-| Navegar | W/A/D ou setas | Segurar e mover sobre a arena |
+| Navegar | Mover o mouse para guiar; segurar W ou ↑ para avançar; A/D ou ←/→ para virar | Segurar e mover sobre a arena |
 | Ataque frontal | Espaço | Atirar à frente (botão Frente) |
 | Ataque lateral esquerdo | Q | Atirar à esquerda (botão de ataque esquerdo) |
 | Ataque lateral direito | E | Atirar à direita (botão de ataque direito) |
 | Ataque especial | R | Especial |
 | Pausar | Escape | Pausar |
 
-Segure avançar e uma direção ao mesmo tempo para se mover em curva, ou segure o botão esquerdo do mouse e mova o cursor sobre a arena. O controle por ponteiro define um destino, mas não arrasta nem teleporta o navio: o motor preserva a rotação, a velocidade e as colisões. O navio não dá ré. Segure um ataque para repeti-lo no intervalo configurado. Movimento, rotação e todos os ataques podem ser combinados. Cada arma tem um tempo de recarga independente.
+No computador, o cursor sobre a arena funciona como leme e não exige clique: ele orienta o navio com uma resposta 20% mais suave que a rotação direta do teclado, enquanto W ou a seta para cima controla o avanço. A/D e as setas laterais continuam disponíveis e têm prioridade enquanto estão pressionadas. No celular, manter um toque sobre a arena orienta e movimenta o navio; soltar interrompe o avanço. Nenhum dos dois modos arrasta ou teleporta o navio: o motor preserva rotação, velocidade e colisões. O navio não dá ré. Segure um ataque para repeti-lo no intervalo configurado. Movimento, rotação e todos os ataques podem ser combinados. Cada arma tem um tempo de recarga independente.
 
 O canhão frontal lança um projétil. Cada ataque lateral lança três projéteis paralelos de posições separadas ao longo do navio. Esquerda e direita são relativas à direção do navio, não à tela. Os projéteis desaparecem no primeiro impacto válido contra um alvo, uma ilha ou o limite da arena, ou quando seu tempo de vida termina. Os disparos do jogador só causam dano aos inimigos; os disparos inimigos só causam dano ao jogador.
 
@@ -98,17 +98,19 @@ O som é ativado após a primeira seleção de **Jogar**, conforme a política d
 11. Segure as três teclas de ataque; cada arma deve repetir seu ataque de forma independente.
 12. Atire em direção à ilha; os disparos devem parar com um efeito visível de impacto, em vez de atravessá-la.
 13. Pause com disparos em movimento; as posições, os efeitos e os tempos de recarga devem parar. Continue sem pressionar o ataque novamente; uma entrada antiga mantida pressionada não deve voltar a disparar.
-14. No celular, arraste sobre a arena com um dedo e pressione um canhão com outro. Inicie uma nova sessão e verifique que nenhum projétil da sessão anterior permanece.
-15. Espere os Perseguidores de velas vermelhas e os Atiradores de velas com caveira. Os Perseguidores perseguem e explodem ao contato; os Atiradores se aproximam e disparam quando estão ao alcance.
-16. Destrua um navio com seus canhões. Ele deve explodir, deixar de participar da partida e conceder exatamente um ponto.
-17. Deixe um Perseguidor colidir com você. A vida deve diminuir, o Perseguidor deve desaparecer e a pontuação não deve aumentar.
-18. Sofra impactos e observe as barras de vida, o clarão de impacto e a aparência danificada do navio. Ao chegar a zero de vida, o resultado deve mostrar Navio destruído e o tempo real jogado.
-19. Altere o intervalo de surgimento, inicie uma nova partida e observe a nova frequência de chegada. Os inimigos devem surgir longe de obstáculos e a uma distância suficiente do jogador.
-20. Reinicie após a morte ou o fim do tempo; vida, pontuação, chegada de inimigos e todas as entidades devem ser reiniciadas.
-21. Com Corações de vida ativados, espere 15 segundos ativos. Um coração deve aparecer por 10 segundos, continuar disponível quando a vida estiver cheia e restaurar até 20 de vida quando coletado com a vida atual abaixo do máximo.
-22. Com Ataque especial ativado, destrua cinco inimigos com canhões. O HUD e o botão de toque devem mostrar Pronto, e dois anéis pulsantes dourados e verdes devem formar uma aura ao redor do navio; pressione R ou Especial para destruir todos os inimigos visíveis e remover disparos hostis.
-23. Verifique que os inimigos destruídos pelo especial concedem pontos, mas não o recarregam, e que usá-lo em uma arena vazia não consome a carga.
-24. Com o som ativo, verifique oceano, canhões, impactos, explosões, pausa, retomada e conclusão. Silencie no cabeçalho, atualize a página e confirme que a preferência permanece salva.
+14. No computador, mova o cursor sem pressionar W e confirme que o navio apenas gira; segure W e confirme que ele avança na direção apontada.
+15. No celular em retrato e paisagem, arraste sobre a arena com um dedo e pressione um canhão no deck inferior com outro. Confirme que os botões não cobrem a arena. Inicie uma nova sessão e verifique que nenhum projétil da sessão anterior permanece.
+16. Espere os Perseguidores de velas vermelhas e os Atiradores de velas com caveira. Os Perseguidores perseguem e explodem ao contato; os Atiradores se aproximam e disparam quando estão ao alcance.
+17. Destrua um navio com seus canhões. Ele deve explodir, deixar de participar da partida e conceder exatamente um ponto.
+18. Deixe um Perseguidor colidir com você. A vida deve diminuir, o Perseguidor deve desaparecer e a pontuação não deve aumentar.
+19. Sofra impactos e observe as barras de vida, o clarão de impacto e a aparência danificada do navio. Ao chegar a zero de vida, o resultado deve mostrar Navio destruído e o tempo real jogado.
+20. Altere o intervalo de surgimento, inicie uma nova partida e observe a nova frequência de chegada. Os inimigos devem surgir longe de obstáculos e a uma distância suficiente do jogador.
+21. Reinicie após a morte ou o fim do tempo; vida, pontuação, chegada de inimigos e todas as entidades devem ser reiniciadas.
+22. Com Corações de vida ativados, espere 15 segundos ativos. Um coração deve aparecer por 10 segundos, continuar disponível quando a vida estiver cheia e restaurar até 20 de vida quando coletado com a vida atual abaixo do máximo.
+23. Com Ataque especial ativado, destrua cinco inimigos com canhões. O HUD e o botão de toque devem mostrar Pronto, e dois anéis pulsantes dourados e verdes devem formar uma aura ao redor do navio; pressione R ou Especial para destruir todos os inimigos visíveis e remover disparos hostis.
+24. Verifique que os inimigos destruídos pelo especial concedem pontos, mas não o recarregam, e que usá-lo em uma arena vazia não consome a carga.
+25. Com o som ativo, verifique oceano, canhões, impactos, explosões, pausa, retomada e conclusão. Silencie no cabeçalho, atualize a página e confirme que a preferência permanece salva.
+26. Depois de concluir uma partida, atualize a página. O menu principal deve abrir, e o pós-batalha persistido deve continuar acessível por **Último resultado**.
 
 Comentários úteis incluem pressão dos inimigos, distância segura de surgimento, comportamento de perseguição e desvio, dano, legibilidade dos projéteis e posicionamento dos botões no celular. Os intervalos de movimento e dos canhões foram aprovados durante iterações anteriores e permanecem inalterados.
 
@@ -136,7 +138,7 @@ A distância percorrida é calculada pela velocidade × tempo de vida. Obstácul
 
 A velocidade de movimento do jogador permanece em 200 unidades/s. A distribuição padrão de surgimento alterna entre Perseguidor e Atirador. Os inimigos surgem a pelo menos 320 unidades do jogador, longe de obstáculos e de inimigos existentes. Se nenhum local seguro estiver disponível, uma nova tentativa ocorre após 0.5s, em vez de forçar um posicionamento inseguro. Um Atirador recém-criado espera sua recarga inicial antes de atacar. Os inimigos giram com velocidade limitada e seguem pontos de desvio locais ao redor das ilhas; não há busca de caminho em grade nem bloqueio entre navios.
 
-Uma partida termina quando o tempo acaba ou a vida chega a zero. O dano letal tem precedência se ambos ocorrerem na mesma etapa da simulação. Os resultados concluídos armazenam a duração ativa real, a pontuação obtida, o motivo do fim e a configuração completa com a versão de balanceamento `survival-v2`. Os resultados existentes de `combat-v1` continuam legíveis e entram em rankings separados; as opções salvas antes desta atualização migram com os dois recursos aprovados ativados. Os resultados dos protótipos anteriores, que tinham apenas navegação, ainda geram um aviso explícito. Atualizar a página ou sair do combate abandona a sessão atual e nunca cria um resultado para ela.
+Uma partida termina quando o tempo acaba ou a vida chega a zero. O dano letal tem precedência se ambos ocorrerem na mesma etapa da simulação. Os resultados concluídos armazenam a duração ativa real, a pontuação obtida, o motivo do fim e a configuração completa com a versão de balanceamento `survival-v2`. Os resultados existentes de `combat-v1` continuam legíveis e entram em rankings separados; as opções salvas antes desta atualização migram com os dois recursos aprovados ativados. Os resultados dos protótipos anteriores, que tinham apenas navegação, ainda geram um aviso explícito. Atualizar a página sempre abre o menu principal e mantém o resultado concluído acessível por **Último resultado**; atualizar durante o combate ou sair dele abandona a sessão atual e nunca cria um resultado para ela.
 
 Não há variáveis de ambiente nem serviços externos obrigatórios. O armazenamento local é específico para cada navegador e origem; desenvolvimento e pré-visualização usam portas diferentes e, portanto, armazenamentos diferentes.
 
@@ -289,7 +291,7 @@ Os cenários definem apenas as condições iniciais. Entradas, dano, colisão, p
 
 ## Referências de regressão visual
 
-A suíte dedicada cobre o menu, uma arena estável com navios inimigos/vida/projéteis e um resultado concluído e registrado. Ela fixa data/hora, localidade, fuso horário e configurações de movimento, espera os recursos/o estado da API e usa a simulação real com tempo controlado. As capturas de tela incluem o canvas real do Pixi. O Chromium para desktop e celular usa referências separadas.
+A suíte dedicada cobre o menu, uma arena estável com navios inimigos/vida/projéteis e um resultado concluído e registrado. Ela fixa data/hora, localidade, fuso horário e configurações de movimento, espera os recursos/o estado da API e usa a simulação real com tempo controlado. As capturas de tela incluem o canvas real do Pixi. O Chromium usa referências separadas para desktop, celular em paisagem e celular em retrato.
 
 No primeiro terminal:
 
@@ -310,7 +312,7 @@ A primeira execução cria os arquivos ausentes em `tests/visual/baselines/<plat
 npm run test:visual
 ```
 
-Mantenha os PNGs aprovados versionados. As referências são específicas de cada plataforma porque fontes, WebGL e renderização do navegador diferem. Existem seis referências Darwin para desktop/celular, e a comparação visual anterior foi aprovada, mas os novos visuais da arena e do HUD exigem uma nova revisão antes que essas referências representem o build atual.
+Mantenha os PNGs aprovados versionados. As referências são específicas de cada plataforma porque fontes, WebGL e renderização do navegador diferem. Existem seis referências Darwin antigas para desktop/celular em paisagem; o novo projeto em retrato ainda não possui suas três referências. O menu, o HUD e o deck mobile exigem nova revisão antes que as imagens representem o build atual.
 
 Os resultados/rastros visuais vão para `test-results/visual/`; o relatório HTML separado vai para `visual-report/`. Abra-o com `npm run test:visual:report`. Alterações intencionais podem ser revisadas com `npm run test:visual -- --update-snapshots=changed`; não gere novamente as referências para ocultar regressões não intencionais.
 
@@ -364,7 +366,7 @@ A validação funcional no navegador continua separada: abra a versão pública 
 - **Página em branco:** verifique erros de build no terminal e erros no console de desenvolvedor do navegador. Inclua o erro exato nos comentários.
 - **Falha ao carregar recursos:** selecione Tentar novamente. Confirme que `public/assets/` existe e use a URL do servidor em vez de abrir um arquivo HTML diretamente.
 - **O jogo pausa durante a inspeção das ferramentas de desenvolvedor:** a pausa automática ao perder o foco é intencional. Selecione Continuar depois de devolver o foco ao jogo.
-- **Os controles de toque parecem pequenos:** gire o celular para a orientação paisagem.
+- **Os controles de toque parecem pequenos:** ambas as orientações são suportadas, mas girar o celular para paisagem oferece uma arena e um deck de canhões maiores.
 - **As alterações não aparecem na pré-visualização:** execute `npm run build` novamente.
 - **O Ranking fica vazio após alterar as opções:** as pontuações são comparadas somente com configurações completas correspondentes. Termine uma partida com as novas configurações ou restaure as configurações padrão para ver os dados padrão.
 - **Falha ao configurar a API simulada:** abra Cenários de rede e use Tentar configurar API. Confirme que `mockServiceWorker.js` está sendo servido e use HTTPS ou localhost. Ainda é possível jogar.

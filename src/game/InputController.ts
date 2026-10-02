@@ -10,6 +10,8 @@ const KEY_ACTIONS: Readonly<Record<string, GameAction>> = {
   KeyR: 'specialAttack',
 };
 
+const MOUSE_STEERING_SCALE = 0.8;
+
 export class InputController {
   private readonly engine: GameEngine;
   private readonly host: HTMLElement;
@@ -52,19 +54,30 @@ export class InputController {
     const target = this.toWorldPoint(clientX, clientY);
     if (!target) return false;
     this.navigationPointer = pointerId;
-    this.engine.setNavigationTarget(target);
+    this.engine.setNavigationTarget({ ...target, autoAdvance: true, steeringScale: 1 });
     return true;
   }
 
   updateNavigation(pointerId: number, clientX: number, clientY: number): void {
     if (this.navigationPointer !== pointerId) return;
-    this.engine.setNavigationTarget(this.toWorldPoint(clientX, clientY, true));
+    const target = this.toWorldPoint(clientX, clientY, true);
+    this.engine.setNavigationTarget(target ? { ...target, autoAdvance: true, steeringScale: 1 } : null);
   }
 
   endNavigation(pointerId: number): void {
     if (this.navigationPointer !== pointerId) return;
     this.navigationPointer = null;
     this.engine.setNavigationTarget(null);
+  }
+
+  steerWithMouse(clientX: number, clientY: number): void {
+    if (this.navigationPointer !== null || this.engine.getHud().status !== 'running') return;
+    const target = this.toWorldPoint(clientX, clientY, true);
+    this.engine.setNavigationTarget(target ? { ...target, autoAdvance: false, steeringScale: MOUSE_STEERING_SCALE } : null);
+  }
+
+  clearMouseSteering(): void {
+    if (this.navigationPointer === null) this.engine.setNavigationTarget(null);
   }
 
   clear(): void {
@@ -105,9 +118,6 @@ export class InputController {
     event.preventDefault();
     if (event.repeat) return;
     this.keys.add(event.code);
-    if (KEY_ACTIONS[event.code] === 'moveForward' || KEY_ACTIONS[event.code] === 'turnLeft' || KEY_ACTIONS[event.code] === 'turnRight') {
-      this.engine.setNavigationTarget(null);
-    }
     this.sync();
   };
 

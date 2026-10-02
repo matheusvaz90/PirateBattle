@@ -122,18 +122,26 @@ export function GameScreen({ options, matchId, audio, soundEnabled, onToggleSoun
   }
 
   function beginNavigation(event: PointerEvent<HTMLDivElement>) {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (event.pointerType === 'mouse') return;
     if (!inputRef.current?.beginNavigation(event.pointerId, event.clientX, event.clientY)) return;
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
   }
 
   function updateNavigation(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === 'mouse') {
+      inputRef.current?.steerWithMouse(event.clientX, event.clientY);
+      return;
+    }
     inputRef.current?.updateNavigation(event.pointerId, event.clientX, event.clientY);
   }
 
   function endNavigation(event: PointerEvent<HTMLDivElement>) {
     inputRef.current?.endNavigation(event.pointerId);
+  }
+
+  function leaveNavigation(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === 'mouse') inputRef.current?.clearMouseSteering();
   }
 
   const remaining = `${Math.floor(hud.remainingSeconds / 60)}:${String(hud.remainingSeconds % 60).padStart(2, '0')}`;
@@ -142,7 +150,7 @@ export function GameScreen({ options, matchId, audio, soundEnabled, onToggleSoun
     <main className="game-screen">
       <header className="game-header">
         <div className="game-brand"><span className="brand-mark" aria-hidden="true">PB</span><div><p className="eyebrow">SOBREVIVA À FROTA</p><h1>Pirate Battle</h1></div></div>
-        <div className="header-actions"><button className="sound-toggle game-sound-toggle" type="button" aria-pressed={soundEnabled} aria-label="Som" onClick={onToggleSound}><span aria-hidden="true">{soundEnabled ? '◖))' : '◖×'}</span></button><button className="button compact secondary" disabled={hud.status !== 'running'} onClick={() => engineRef.current?.pause()}>Pausar</button><button className="button compact secondary" onClick={onMenu}>Menu principal</button></div>
+        <div className="header-actions"><button className="sound-toggle game-sound-toggle" type="button" aria-pressed={soundEnabled} aria-label="Som" onClick={onToggleSound}><span aria-hidden="true">{soundEnabled ? '◖))' : '◖×'}</span></button><button className="button compact secondary" disabled={hud.status !== 'running'} onClick={() => engineRef.current?.pause()}>Pausar</button><button className="button compact secondary" aria-label="Menu principal" onClick={onMenu}>Menu</button></div>
       </header>
       <section className="hud" aria-label="Informações da partida">
         <div className="health-status"><span className="hud-icon heart-icon" aria-hidden="true" /><span className="hud-label">VIDA DO NAVIO <strong data-testid="ship-health">{hud.health} / {hud.maxHealth}</strong></span><span className="health-track" aria-hidden="true"><span style={{ width: `${hud.health / hud.maxHealth * 100}%` }} /></span></div>
@@ -154,21 +162,19 @@ export function GameScreen({ options, matchId, audio, soundEnabled, onToggleSoun
         </div>
       </section>
       <section className="arena-shell" aria-label="Arena do jogo">
-        <div className="arena-host" ref={hostRef} tabIndex={0} role="group" aria-label="Segure e arraste na arena para navegar. W, A e D também movem o navio; Espaço, Q e E disparam; R usa o especial e Escape pausa." data-testid="arena" onPointerDown={beginNavigation} onPointerMove={updateNavigation} onPointerUp={endNavigation} onPointerCancel={endNavigation} onLostPointerCapture={endNavigation} onContextMenu={(event) => event.preventDefault()} />
+        <div className="arena-host" ref={hostRef} tabIndex={0} role="group" aria-label="No computador, mova o mouse para guiar e segure W para avançar. No celular, segure e arraste para navegar. Espaço, Q e E disparam; R usa o especial e Escape pausa." data-testid="arena" onPointerDown={beginNavigation} onPointerMove={updateNavigation} onPointerLeave={leaveNavigation} onPointerUp={endNavigation} onPointerCancel={endNavigation} onLostPointerCapture={endNavigation} onContextMenu={(event) => event.preventDefault()} />
         {loading && <div className="arena-overlay" role="status"><p className="eyebrow">PREPARANDO SUA VIAGEM</p><h2>Carregando o mar…</h2><progress value={progress} max={100} aria-label="Progresso do carregamento dos recursos" /><span>{progress}%</span></div>}
         {error && <div className="arena-overlay"><h2>Não foi possível zarpar</h2><p role="alert">{error}</p><button className="button primary" onClick={retry}>Tentar novamente</button></div>}
-        <div className="arena-controls">
-          <div className="touch-action-deck" role="group" aria-label="Controles de ataque por toque">
-            <div className="touch-controls">
-              {ATTACK_CONTROLS.map(({ action, label, accessibleLabel, icon }) => <button key={action} className="touch-button attack-button" disabled={hud.status !== 'running'} aria-label={accessibleLabel} onPointerDown={(event) => press(event, action)} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><img src={`${import.meta.env.BASE_URL}assets/png/retina/ui/controls/${icon}`} alt="" aria-hidden="true" />{label}</button>)}
-            </div>
-            {options.specialAttackEnabled && <div className="touch-controls special-controls" role="group" aria-label="Controle de ataque especial por toque"><button className="touch-button special-button" disabled={hud.status !== 'running' || !hud.specialReady} aria-label="Usar ataque especial" onPointerDown={(event) => press(event, 'specialAttack')} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><span aria-hidden="true">✦</span>{hud.specialReady ? 'Especial' : `${hud.specialCharge}/${hud.specialRequired}`}</button></div>}
-          </div>
-        </div>
-        <p className="orientation-hint">Segure e arraste sobre o mar para navegar. Use os botões para atacar.</p>
       </section>
+      <div className={`mobile-command-deck${options.specialAttackEnabled ? ' with-special' : ''}`} role="group" aria-label="Controles de ataque por toque">
+        <div className="touch-controls">
+          {ATTACK_CONTROLS.map(({ action, label, accessibleLabel, icon }) => <button key={action} className="touch-button attack-button" disabled={hud.status !== 'running'} aria-label={accessibleLabel} onPointerDown={(event) => press(event, action)} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><img src={`${import.meta.env.BASE_URL}assets/png/retina/ui/controls/${icon}`} alt="" aria-hidden="true" />{label}</button>)}
+        </div>
+        {options.specialAttackEnabled && <div className="touch-controls special-controls" role="group" aria-label="Controle de ataque especial por toque"><button className="touch-button special-button" disabled={hud.status !== 'running' || !hud.specialReady} aria-label="Usar ataque especial" onPointerDown={(event) => press(event, 'specialAttack')} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><span aria-hidden="true">✦</span>{hud.specialReady ? 'Especial' : `${hud.specialCharge}/${hud.specialRequired}`}</button></div>}
+        <p className="mobile-orientation-advice">Para enxergar melhor a batalha, jogue com o celular deitado.</p>
+      </div>
       <footer className="game-footer">
-        <p className="game-help"><strong>CONTROLES</strong><span>Segure o botão esquerdo e mova o mouse para navegar. <kbd>W</kbd> <kbd>A</kbd> <kbd>D</kbd> também movem · <kbd>Espaço</kbd> Frente · <kbd>Q</kbd> Esquerda · <kbd>E</kbd> Direita · {options.specialAttackEnabled && <><kbd>R</kbd> Especial · </>}<kbd>Esc</kbd> Pausar</span></p>
+        <p className="game-help"><strong>CONTROLES</strong><span>Mova o mouse para guiar e segure <kbd>W</kbd> para avançar · <kbd>A</kbd> <kbd>D</kbd> também viram · <kbd>Espaço</kbd> Frente · <kbd>Q</kbd> Esquerda · <kbd>E</kbd> Direita · {options.specialAttackEnabled && <><kbd>R</kbd> Especial · </>}<kbd>Esc</kbd> Pausar</span></p>
       </footer>
       {hud.status === 'paused' && <PauseDialog onResume={() => { inputRef.current?.clear(); engineRef.current?.resume(); hostRef.current?.focus({ preventScroll: true }); }} onMenu={onMenu} />}
     </main>
