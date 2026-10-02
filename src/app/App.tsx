@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useData } from '../api/dataContext.ts';
 import { createId } from '../storage/identity.ts';
 import type { GameOptions, MatchResult } from '../game/types.ts';
-import { loadLastResult, loadOptions, saveLastResult, saveOptions } from '../storage/preferences.ts';
+import { AudioController } from '../audio/AudioController.ts';
+import { loadAudioEnabled, loadLastResult, loadOptions, saveAudioEnabled, saveLastResult, saveOptions } from '../storage/preferences.ts';
 import { GameScreen } from './screens/GameScreen.tsx';
 import { OptionsScreen } from './screens/OptionsScreen.tsx';
 import { MatchTabs } from './components/MatchTabs.tsx';
@@ -14,18 +15,22 @@ type Screen = { type: 'menu' } | { type: 'options' } | { type: 'game'; matchId: 
 
 export function App() {
   const { enqueue, player } = useData();
-  const [initialStorage] = useState(() => ({ options: loadOptions(), result: loadLastResult() }));
+  const [initialStorage] = useState(() => ({ options: loadOptions(), result: loadLastResult(), audio: loadAudioEnabled() }));
+  const [audio] = useState(() => new AudioController(initialStorage.audio.value));
   const [options, setOptions] = useState(initialStorage.options.value);
+  const [soundEnabled, setSoundEnabled] = useState(initialStorage.audio.value);
   const [lastResult, setLastResult] = useState(initialStorage.result.value);
   const [screen, setScreen] = useState<Screen>(() => initialStorage.result.value
     ? { type: 'result', result: initialStorage.result.value }
     : { type: 'menu' });
-  const [notice, setNotice] = useState<string | null>(initialStorage.options.error ?? initialStorage.result.error);
+  const [notice, setNotice] = useState<string | null>(initialStorage.options.error ?? initialStorage.result.error ?? initialStorage.audio.error);
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (screen.type !== 'game') mainRef.current?.focus();
   }, [screen.type]);
+
+  useEffect(() => () => audio.dispose(), [audio]);
 
   const completeMatch = useCallback((result: MatchResult) => {
     enqueue(result);
@@ -36,7 +41,18 @@ export function App() {
   }, [enqueue]);
 
   function play() {
+    void audio.unlock();
+    audio.playInterface('uiClick');
     setScreen({ type: 'game', matchId: createId() });
+  }
+
+  function toggleSound() {
+    const next = !soundEnabled;
+    audio.setEnabled(next);
+    if (next) audio.playInterface('uiOpen');
+    setSoundEnabled(next);
+    const error = saveAudioEnabled(next);
+    if (error) setNotice(error);
   }
 
   function persistOptions(next: GameOptions): string | null {
@@ -49,42 +65,44 @@ export function App() {
   }
 
   if (screen.type === 'game') {
-    return <GameScreen key={screen.matchId} options={options} matchId={screen.matchId} onComplete={completeMatch} onMenu={() => setScreen({ type: 'menu' })} />;
+    return <GameScreen key={screen.matchId} options={options} matchId={screen.matchId} audio={audio} soundEnabled={soundEnabled} onToggleSound={toggleSound} onComplete={completeMatch} onMenu={() => { audio.playInterface('uiBack'); setScreen({ type: 'menu' }); }} />;
   }
 
   return (
     <main className="app-shell" ref={mainRef} tabIndex={-1}>
       <header className="site-header">
         <button className="brand" onClick={() => setScreen({ type: 'menu' })} aria-label="Menu principal do Pirate Battle">
-          <span className="brand-mark" aria-hidden="true">PB</span><span>PIRATE BATTLE</span>
+          <span className="brand-mark" aria-hidden="true">PB</span><span><strong>PIRATE</strong> BATTLE</span>
         </button>
-        <span className="build-label">CAPITÃO: {player.playerName.toUpperCase()}</span>
+        {screen.type === 'menu' && <span className="menu-status">ÁGUAS HOSTIS · SOBREVIVA À FROTA</span>}
+        <div className="header-meta"><button className="sound-toggle" type="button" aria-pressed={soundEnabled} aria-label="Som" onClick={toggleSound}><span aria-hidden="true">{soundEnabled ? '◖))' : '◖×'}</span>{soundEnabled ? 'SOM ATIVO' : 'SEM SOM'}</button><span className="build-label"><span>CAPITÃO</span>{player.playerName.toUpperCase()}</span></div>
       </header>
       {notice && <p className="notice" role="alert">{notice}</p>}
-      {screen.type === 'options' && <OptionsScreen options={options} onSave={persistOptions} onCancel={() => setScreen({ type: 'menu' })} />}
+      {screen.type === 'options' && <OptionsScreen options={options} onSave={persistOptions} onCancel={() => { audio.playInterface('uiBack'); setScreen({ type: 'menu' }); }} />}
       {screen.type === 'menu' && (
         <>
-          <section className="menu-hero">
-            <div className="hero-copy">
-              <p className="eyebrow">O MAR ABERTO ESTÁ CHAMANDO</p>
-              <h1>Um capitão.<br />Um mar aberto.<br /><em>Sua próxima aventura.</em></h1>
-              <p className="hero-description">Assuma o leme, navegue ao redor da ilha e sobreviva à frota inimiga. Afunde navios com o canhão frontal e os ataques laterais.</p>
-              <div className="menu-actions">
-                <button className="button primary" onClick={play}>Jogar <span aria-hidden="true">↗</span></button>
-                <button className="button secondary" onClick={() => setScreen({ type: 'options' })}>Opções</button>
+          <section className="menu-hero" id="batalha">
+            <div className="game-menu-panel">
+              <h1 className="game-menu-title"><img src={`${import.meta.env.BASE_URL}assets/png/retina/ui/menu/title_pirate_battle.png`} alt="Pirate Battle" /></h1>
+              <p className="game-menu-mission">ASSUMA O LEME · ROMPA O BLOQUEIO</p>
+              <div className="game-menu-actions">
+                <button className="game-menu-button primary" aria-label="Jogar" onClick={play}>Jogar</button>
+                <button className="game-menu-button secondary" onClick={() => { audio.playInterface('uiOpen'); setScreen({ type: 'options' }); }}>Opções</button>
               </div>
-              <div className="session-summary"><span>PARTIDA <strong>{options.sessionTime}s</strong></span><span>INTERVALO DE INIMIGOS <strong>{options.enemySpawnTime}s</strong></span></div>
-              {lastResult && <button className="text-button" onClick={() => setScreen({ type: 'result', result: lastResult })}>Ver último resultado →</button>}
-            </div>
-            <div className="hero-art" aria-hidden="true">
-              <div className="compass-ring ring-outer" /><div className="compass-ring ring-inner" />
-              <span className="compass-north">N</span><span className="compass-south">S</span>
-              <img className="hero-ship" src={`${import.meta.env.BASE_URL}assets/png/default/ships/ship_5.png`} alt="" />
-              <span className="chart-label">ÁGUAS INEXPLORADAS</span>
+              <div className="mission-summary" aria-label="Configuração da partida">
+                <span><strong>{options.sessionTime}s</strong> de batalha</span>
+                <span><strong>{options.enemySpawnTime}s</strong> entre inimigos</span>
+                <span><strong>5 abates</strong> carregam o especial</span>
+              </div>
+              <nav className="game-menu-links" aria-label="Atalhos do menu">
+                <a href="#comando">Como jogar</a>
+                <a href="#ranking">Ranking</a>
+                {lastResult && <button onClick={() => setScreen({ type: 'result', result: lastResult })}>Último resultado</button>}
+              </nav>
             </div>
           </section>
-          <section className="control-guide" aria-labelledby="controls-heading">
-             <div><p className="eyebrow">APRENDA OS CONTROLES</p><h2 id="controls-heading">Você está no comando.</h2><p>Combine movimento e rotação. No celular, vire o aparelho de lado e use os botões de toque.</p></div>
+          <section className="control-guide" id="comando" aria-labelledby="controls-heading">
+             <div><p className="eyebrow"><span />DOMINE O CONVÉS</p><h2 id="controls-heading">Você está no comando.</h2><p>Segure e mova o ponteiro sobre o mar para navegar. No celular, arraste sobre a arena e use os canhões na tela.</p></div>
             <dl className="key-guide">
                <div><dt><kbd>W</kbd> / <kbd>↑</kbd></dt><dd>Avançar</dd></div>
                <div><dt><kbd>A</kbd> <kbd>D</kbd></dt><dd>Virar à esquerda / direita</dd></div>
@@ -94,10 +112,10 @@ export function App() {
             </dl>
           </section>
           <PendingSubmissions />
-          <MatchTabs options={options} />
+          <div id="ranking"><MatchTabs options={options} /></div>
           <NetworkPanel />
           <PerformancePanel />
-           <footer className="menu-footer"><span>Velas vermelhas perseguem. Velas com caveira atiram. Cada navio afundado vale 1 ponto.</span><span>REACT + PIXIJS</span></footer>
+           <footer className="menu-footer"><span>Velas vermelhas perseguem. Velas com caveira atiram. Cada navio afundado vale 1 ponto.</span><span>PIRATE BATTLE · 2026</span></footer>
         </>
       )}
       {screen.type === 'result' && (

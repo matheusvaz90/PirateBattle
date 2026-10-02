@@ -2,7 +2,7 @@ import { FIXED_STEP, MAX_FRAME_STEPS, WEAPON_IDS } from './config.ts';
 import { findProjectileObstacle, isPositionBlocked, resolveMovement, segmentCircleHit } from './collision.ts';
 import type { ObstacleHit } from './collision.ts';
 import { createRandom, seedFromId } from './random.ts';
-import type { EffectSnapshot, EndReason, EnemyPlacement, EnemySnapshot, Faction, GameAction, GameConfig, GameSetup, GameStatus, HealthPickupSnapshot, HudSnapshot, MatchResult, Point, ProjectileSnapshot, WeaponConfig, WeaponId, WorldSnapshot } from './types.ts';
+import type { EffectSnapshot, EndReason, EnemyPlacement, EnemySnapshot, Faction, GameAction, GameConfig, GameEvent, GameSetup, GameStatus, HealthPickupSnapshot, HudSnapshot, MatchResult, NavigationTarget, Point, ProjectileSnapshot, WeaponConfig, WeaponId, WorldSnapshot } from './types.ts';
 
 interface Avoidance {
   readonly islandIndex: number;
@@ -44,7 +44,9 @@ export class GameEngine {
   private readonly cooldowns: Record<WeaponId, number> = { front: 0, left: 0, right: 0 };
   private nextEntityId = 1;
   private readonly actions = new Set<GameAction>();
+  private navigationTarget: NavigationTarget | null = null;
   private readonly listeners = new Set<(snapshot: HudSnapshot) => void>();
+  private readonly eventListeners = new Set<(event: GameEvent) => void>();
   private lastHudKey = '';
   private result: MatchResult | null = null;
   private readonly matchId: string;
@@ -68,6 +70,7 @@ export class GameEngine {
     if (this.status !== 'ready') return;
     this.status = 'running';
     this.publish();
+    this.emit({ type: 'statusChanged', status: this.status });
   }
 
   setActions(actions: ReadonlySet<GameAction>): void {
@@ -77,11 +80,24 @@ export class GameEngine {
     if (requestSpecial) this.specialRequested = true;
   }
 
+  setNavigationTarget(target: NavigationTarget | null): void {
+    if (this.status !== 'running' || target === null) {
+      this.navigationTarget = null;
+      return;
+    }
+    if (!Number.isFinite(target.x) || !Number.isFinite(target.y)) return;
+    this.navigationTarget = {
+      x: Math.max(this.config.player.radius, Math.min(this.config.arena.width - this.config.player.radius, target.x)),
+      y: Math.max(this.config.player.radius, Math.min(this.config.arena.height - this.config.player.radius, target.y)),
+    };
+  }
+
   pause(): void {
     if (this.status !== 'running') return;
     this.status = 'paused';
     this.resetInputAndTime();
     this.publish();
+    this.emit({ type: 'statusChanged', status: this.status });
   }
 
   resume(): void {
@@ -89,6 +105,7 @@ export class GameEngine {
     this.resetInputAndTime();
     this.status = 'running';
     this.publish();
+    this.emit({ type: 'statusChanged', status: this.status });
   }
 
   abandon(): void {
@@ -96,6 +113,7 @@ export class GameEngine {
     this.status = 'abandoned';
     this.resetInputAndTime();
     this.publish();
+    this.emit({ type: 'statusChanged', status: this.status });
   }
 
   advance(elapsedSeconds: number): void {
@@ -145,9 +163,15 @@ export class GameEngine {
     return () => { this.listeners.delete(listener); };
   }
 
+  subscribeEvents(listener: (event: GameEvent) => void): () => void {
+    this.eventListeners.add(listener);
+    return () => { this.eventListeners.delete(listener); };
+  }
+
   dispose(): void {
     this.abandon();
     this.listeners.clear();
+    this.eventListeners.clear();
     this.projectiles = [];
     this.effects = [];
     this.healthPickup = null;
@@ -158,10 +182,27 @@ export class GameEngine {
     const dt = Math.min(FIXED_STEP, this.config.sessionTime - this.activeDuration);
     const previousPlayer = { x: this.x, y: this.y };
     const previousEnemies = new Map(this.enemies.map((enemy) => [enemy.id, { x: enemy.x, y: enemy.y }]));
+    const manualNavigation = this.actions.has('moveForward') || this.actions.has('turnLeft') || this.actions.has('turnRight');
     const turn = Number(this.actions.has('turnRight')) - Number(this.actions.has('turnLeft'));
-    this.heading = (this.heading + turn * this.config.player.rotationSpeed * dt) % (Math.PI * 2);
+    let moveForward = this.actions.has('moveForward');
+    if (this.navigationTarget && !manualNavigation) {
+      const dx = this.navigationTarget.x - this.x;
+      const dy = this.navigationTarget.y - this.y;
+      const distance = Math.hypot(dx, dy);
+      if (distance <= this.config.player.radius) this.navigationTarget = null;
+      else {
+        const desired = Math.atan2(dy, dx);
+        const delta = Math.atan2(Math.sin(desired - this.heading), Math.cos(desired - this.heading));
+        const rotation = Math.max(-this.config.player.rotationSpeed * dt, Math.min(this.config.player.rotationSpeed * dt, delta));
+        this.heading += rotation;
+        moveForward = true;
+      }
+    } else {
+      this.heading += turn * this.config.player.rotationSpeed * dt;
+    }
+    this.heading %= Math.PI * 2;
 
-    if (this.actions.has('moveForward')) {
+    if (moveForward) {
       const position = resolveMovement(
         { x: this.x, y: this.y },
         {
@@ -201,6 +242,7 @@ export class GameEngine {
   }
 
   private fireWeapon(weapon: WeaponConfig, weaponId: ProjectileSnapshot['weapon'], faction: Faction, source: Point, shipHeading: number): void {
+    this.emit({ type: 'weaponFired', weapon: weaponId, faction });
     const heading = shipHeading + weapon.directionOffset;
     const cos = Math.cos(shipHeading);
     const sin = Math.sin(shipHeading);
@@ -259,7 +301,8 @@ export class GameEngine {
 
   private applyProjectileHit(hit: ProjectileHit, damage: number): void {
     this.addEffect('impact', hit);
-    if (hit.target === 'player') this.damagePlayer(damage);
+    this.emit({ type: 'projectileImpact', target: hit.target === null ? 'terrain' : hit.target === 'player' ? 'player' : 'enemy' });
+    if (hit.target === 'player') this.damagePlayer(damage, 'projectile');
     else if (hit.target !== null) {
       const index = this.enemies.findIndex((enemy) => enemy.id === hit.target);
       const enemy = this.enemies[index];
@@ -270,14 +313,16 @@ export class GameEngine {
         this.score += 1;
         if (this.config.specialAttackEnabled) this.specialCharge = Math.min(this.config.specialAttack.requiredKills, this.specialCharge + 1);
         this.addEffect('destruction', enemy);
+        this.emit({ type: 'enemyDestroyed', cause: 'cannon' });
       }
     }
   }
 
-  private damagePlayer(damage: number): void {
+  private damagePlayer(damage: number, cause: 'projectile' | 'collision'): void {
     if (this.health <= 0) return;
     this.health = Math.max(0, this.health - damage);
     this.damageFlash = this.config.feedback.damageFlashDuration;
+    this.emit({ type: 'playerDamaged', cause, health: this.health, maxHealth: this.config.player.maxHealth });
     if (this.health === 0) this.addEffect('destruction', { x: this.x, y: this.y });
   }
 
@@ -333,7 +378,8 @@ export class GameEngine {
       this.enemies[index] = { ...enemy, health: 0 };
       this.addEffect('destruction', enemy);
       this.addEffect('impact', { x: this.x, y: this.y });
-      this.damagePlayer(this.config.enemies.chaser.contactDamage);
+      this.emit({ type: 'enemyDestroyed', cause: 'collision' });
+      this.damagePlayer(this.config.enemies.chaser.contactDamage, 'collision');
     }
   }
 
@@ -404,6 +450,7 @@ export class GameEngine {
         && segmentCircleHit(previousPlayer, { x: this.x, y: this.y }, this.healthPickup, this.config.player.radius + this.healthPickup.radius) !== null) {
         this.health = Math.min(this.config.player.maxHealth, this.health + this.config.healthPickup.healAmount);
         this.addEffect('heal', this.healthPickup);
+        this.emit({ type: 'healthCollected' });
         this.healthPickup = null;
       }
     }
@@ -438,6 +485,7 @@ export class GameEngine {
     this.score += targets.length;
     this.specialCharge = 0;
     this.addEffect('special', { x: this.x, y: this.y });
+    this.emit({ type: 'specialActivated', targets: targets.length });
   }
 
   private addEffect(kind: EffectSnapshot['kind'], position: Point): void {
@@ -463,11 +511,13 @@ export class GameEngine {
       configuration: structuredClone(this.config),
     };
     this.publish();
+    this.emit({ type: 'statusChanged', status: this.status, endReason });
     this.onComplete(this.result);
   }
 
   private resetInputAndTime(): void {
     this.actions.clear();
+    this.navigationTarget = null;
     this.specialRequested = false;
     this.accumulator = 0;
   }
@@ -478,5 +528,9 @@ export class GameEngine {
     if (key === this.lastHudKey) return;
     this.lastHudKey = key;
     this.listeners.forEach((listener) => listener(hud));
+  }
+
+  private emit(event: GameEvent): void {
+    this.eventListeners.forEach((listener) => listener(event));
   }
 }

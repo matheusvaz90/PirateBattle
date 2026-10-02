@@ -3,6 +3,8 @@ export interface Point {
   readonly y: number;
 }
 
+export type NavigationTarget = Point;
+
 export interface BaseGameOptions {
   readonly sessionTime: number;
   readonly enemySpawnTime: number;
@@ -118,6 +120,16 @@ export type MatchConfiguration = LegacyGameConfig | GameConfig;
 
 export type GameAction = 'moveForward' | 'turnLeft' | 'turnRight' | 'fireFront' | 'fireLeft' | 'fireRight' | 'specialAttack';
 export type GameStatus = 'ready' | 'running' | 'paused' | 'finished' | 'abandoned';
+
+export type GameEvent =
+  | { readonly type: 'statusChanged'; readonly status: Exclude<GameStatus, 'finished'> }
+  | { readonly type: 'statusChanged'; readonly status: 'finished'; readonly endReason: EndReason }
+  | { readonly type: 'weaponFired'; readonly weapon: WeaponId | 'enemy'; readonly faction: Faction }
+  | { readonly type: 'projectileImpact'; readonly target: 'terrain' | 'player' | 'enemy' }
+  | { readonly type: 'enemyDestroyed'; readonly cause: 'cannon' | 'collision' }
+  | { readonly type: 'playerDamaged'; readonly cause: 'projectile' | 'collision'; readonly health: number; readonly maxHealth: number }
+  | { readonly type: 'healthCollected' }
+  | { readonly type: 'specialActivated'; readonly targets: number };
 
 export interface ShipSnapshot extends Point {
   readonly heading: number;

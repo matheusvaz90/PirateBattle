@@ -13,7 +13,7 @@ async function setScenario(page: Page, value: string) {
 
 async function finishMatch(page: Page, button = 'Jogar') {
   await page.getByRole('button', { name: button, exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();
   await page.evaluate(() => {
     if (!window.__PIRATE_TEST__) throw new Error('Use the dedicated test build for registration flows.');
     window.__PIRATE_TEST__.advance(0.5);

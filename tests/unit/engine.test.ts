@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createGameConfig, DEFAULT_OPTIONS, FIXED_STEP } from '../../src/game/config.ts';
 import { GameEngine } from '../../src/game/GameEngine.ts';
-import type { GameAction, MatchResult } from '../../src/game/types.ts';
+import type { GameAction, GameEvent, MatchResult } from '../../src/game/types.ts';
 
 function engine(actions: readonly GameAction[] = []) {
   const game = new GameEngine(createGameConfig(DEFAULT_OPTIONS), 'test-match', () => {}, { spawning: false });
@@ -10,6 +10,19 @@ function engine(actions: readonly GameAction[] = []) {
   game.setActions(new Set(actions));
   return game;
 }
+
+test('typed game events describe status and one weapon action without visual coupling', () => {
+  const game = new GameEngine(createGameConfig(DEFAULT_OPTIONS), 'event-test', () => {}, { spawning: false });
+  const events: GameEvent[] = [];
+  game.subscribeEvents((event) => events.push(event));
+  game.start();
+  game.setActions(new Set(['fireLeft']));
+  game.advance(FIXED_STEP);
+  game.pause();
+  game.resume();
+  assert.deepEqual(events.filter((event) => event.type === 'statusChanged').map((event) => event.status), ['running', 'paused', 'running']);
+  assert.deepEqual(events.filter((event) => event.type === 'weaponFired'), [{ type: 'weaponFired', weapon: 'left', faction: 'player' }]);
+});
 
 test('equal active time produces equivalent movement at 30, 60, and 144 FPS', () => {
   const worlds = [30, 60, 144].map((fps) => {
@@ -44,6 +57,31 @@ test('movement cannot leave the visible arena', () => {
   game.setActions(new Set(['moveForward']));
   for (let frame = 0; frame < 120; frame += 1) game.advance(FIXED_STEP);
   assert.equal(game.getWorld().player.x, config.arena.width - config.player.radius);
+});
+
+test('navigation target turns and moves the ship until input is released', () => {
+  const game = engine();
+  const before = game.getWorld().player;
+  game.setNavigationTarget({ x: before.x + 300, y: before.y + 180 });
+  game.advance(0.5);
+  const moving = game.getWorld().player;
+  assert.ok(moving.x > before.x);
+  assert.ok(moving.y > before.y);
+  assert.ok(moving.heading > before.heading);
+  game.setNavigationTarget(null);
+  game.advance(0.5);
+  assert.deepEqual(game.getWorld().player, moving);
+});
+
+test('pause clears navigation target and resume cannot replay it', () => {
+  const game = engine();
+  game.setNavigationTarget({ x: 500, y: 500 });
+  game.advance(0.1);
+  game.pause();
+  const paused = game.getWorld().player;
+  game.resume();
+  game.advance(0.5);
+  assert.deepEqual(game.getWorld().player, paused);
 });
 
 test('pause freezes movement and time and resume clears held actions', () => {

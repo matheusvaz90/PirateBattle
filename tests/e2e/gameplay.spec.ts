@@ -4,7 +4,7 @@ import type { Page } from '@playwright/test';
 async function startControlledGame(page: Page, scenario = 'navigation') {
   await page.goto(`/?scenario=${scenario}`);
   await page.getByRole('button', { name: 'Jogar', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();
   await page.evaluate(() => {
     if (!window.__PIRATE_TEST__) throw new Error('Use npm run build:test for controlled gameplay tests.');
     window.__PIRATE_TEST__.controlClock();
@@ -84,7 +84,7 @@ test('timeout restores the result after refresh and restart creates a clean ship
   await page.reload();
   await expect(page.getByRole('heading', { name: 'De volta ao porto.' })).toBeVisible();
   await page.getByRole('button', { name: 'Jogar novamente', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();
   const restarted = await snapshot(page);
   expect(restarted.player.x).toBe(220);
   expect(restarted.player.y).toBe(360);
@@ -97,16 +97,15 @@ test('timeout restores the result after refresh and restart creates a clean ship
 
 test('pointer controls move the ship and release stops movement', async ({ page }) => {
   await startControlledGame(page);
-  const button = page.getByRole('button', { name: 'Avançar', exact: true });
-  const bounds = await button.boundingBox();
-  if (!bounds) throw new Error('The touch control is not visible.');
-  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  const arena = await page.getByTestId('arena').boundingBox();
+  if (!arena) throw new Error('The arena is not visible.');
+  await page.mouse.move(arena.x + arena.width * 0.75, arena.y + arena.height * 0.7);
   await page.mouse.down();
   const before = await snapshot(page);
   await advance(page, 0.5);
   await page.mouse.up();
   const moved = await snapshot(page);
-  expect(moved.player.x).toBeGreaterThan(before.player.x);
+  expect(Math.hypot(moved.player.x - before.player.x, moved.player.y - before.player.y)).toBeGreaterThan(0);
   await advance(page, 0.5);
   expect((await snapshot(page)).player).toEqual(moved.player);
 });
@@ -191,11 +190,12 @@ test('paused shots and weapon cooldowns remain frozen and do not replay old fire
   await page.keyboard.up('Space');
 });
 
-test('two touch pointers can move and fire together and release clears movement', async ({ page, context }) => {
+test('two touch pointers can move and fire together and release clears movement', async ({ page, context }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Touch controls are presented on coarse pointers.');
   await startControlledGame(page);
-  const forward = await page.getByRole('button', { name: 'Avançar', exact: true }).boundingBox();
+  const arena = await page.getByTestId('arena').boundingBox();
   const fire = await page.getByRole('button', { name: 'Atirar à frente', exact: true }).boundingBox();
-  if (!forward || !fire) throw new Error('The touch controls are not visible.');
+  if (!arena || !fire) throw new Error('The touch controls are not visible.');
   const before = await snapshot(page);
   const session = await context.newCDPSession(page);
   try {
@@ -203,7 +203,7 @@ test('two touch pointers can move and fire together and release clears movement'
     await session.send('Input.dispatchTouchEvent', {
       type: 'touchStart',
       touchPoints: [
-        { id: 1, x: forward.x + forward.width / 2, y: forward.y + forward.height / 2 },
+        { id: 1, x: arena.x + arena.width * 0.75, y: arena.y + arena.height * 0.6 },
         { id: 2, x: fire.x + fire.width / 2, y: fire.y + fire.height / 2 },
       ],
     });
@@ -315,7 +315,7 @@ test('death shows and persists the result and Play Again resets health and score
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Seu navio afundou.' })).toBeVisible();
   await page.getByRole('button', { name: 'Jogar novamente', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();
   const fresh = await snapshot(page);
   expect(fresh.player.health).toBe(100);
   expect(fresh.score).toBe(0);

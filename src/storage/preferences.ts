@@ -13,6 +13,30 @@ interface ReadResult<T> {
 
 export const OPTIONS_KEY = 'pirate-battle.options.v1';
 export const RESULT_KEY = 'pirate-battle.last-result.v1';
+export const AUDIO_KEY = 'pirate-battle.audio.v1';
+
+export function loadAudioEnabled(storage?: StoragePort): ReadResult<boolean> {
+  try {
+    const raw = (storage ?? window.localStorage).getItem(AUDIO_KEY);
+    if (raw === null) return { value: true, error: null };
+    const saved: unknown = JSON.parse(raw);
+    if (!isRecord(saved) || saved.version !== 1 || typeof saved.enabled !== 'boolean') {
+      return { value: true, error: 'A preferência de áudio salva era inválida. O som foi ativado por padrão.' };
+    }
+    return { value: saved.enabled, error: null };
+  } catch {
+    return { value: true, error: 'Não foi possível carregar a preferência de áudio. O som foi ativado por padrão.' };
+  }
+}
+
+export function saveAudioEnabled(enabled: boolean, storage?: StoragePort): string | null {
+  try {
+    (storage ?? window.localStorage).setItem(AUDIO_KEY, JSON.stringify({ version: 1, enabled }));
+    return null;
+  } catch {
+    return 'Não foi possível salvar a preferência de áudio.';
+  }
+}
 
 export function loadOptions(storage?: StoragePort): ReadResult<GameOptions> {
   try {

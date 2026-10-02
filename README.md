@@ -8,7 +8,7 @@ Acesse a versão publicada: [Pirate Battle no Cloudflare](https://piratebattle.m
 
 ## Versão atual
 
-A partida para um jogador, os itens de recuperação de vida, o ataque especial carregado, o ranking e o histórico paginados, os envios pendentes persistentes e os cenários reproduzíveis de falha de rede estão implementados. React/PixiJS cuidam da jogabilidade e da interface; TanStack Query e Axios consomem APIs REST interceptadas pelo MSW. A versão pública está hospedada no Cloudflare. Evidências atualizadas de navegador, análise de desempenho e acabamento final continuam pendentes. Consulte [o plano de implementação](docs/IMPLEMENTATION_PLAN.md) e [o progresso atual](docs/PROGRESS.md) antes de continuar o desenvolvimento.
+A partida para um jogador, os itens de recuperação de vida, o ataque especial carregado, o áudio, o ranking e o histórico paginados, os envios pendentes persistentes e os cenários reproduzíveis de falha de rede estão implementados. React controla a interface, PixiJS renderiza exclusivamente o gameplay e os assets oficiais formam o menu inicial estático; TanStack Query e Axios consomem APIs REST interceptadas pelo MSW. A versão pública anterior está hospedada no Cloudflare, mas o redesign local ainda não foi publicado. Evidências atualizadas de navegador, análise de desempenho e acabamento final continuam pendentes. Consulte [o plano de implementação](docs/IMPLEMENTATION_PLAN.md) e [o progresso atual](docs/PROGRESS.md) antes de continuar o desenvolvimento.
 
 ## Comece aqui: execute o jogo
 
@@ -60,28 +60,28 @@ Não abra `index.html` diretamente: o projeto precisa do servidor Vite para reso
 
 Conecte o celular e o computador à mesma rede Wi-Fi. Com `npm run dev` em execução, abra no celular a URL de **Network** exibida pelo Vite. `localhost` no celular se refere ao próprio celular, não ao computador.
 
-Use a orientação paisagem. Os botões de toque abaixo da arena aceitam pressionamentos simultâneos. Se a URL de rede estiver inacessível, verifique o firewall do computador e se a rede Wi-Fi permite a comunicação entre dispositivos.
+Use a orientação paisagem. Segure e arraste sobre o mar para navegar; o barco segue o dedo com a velocidade, rotação e colisões normais e para quando o toque termina. Os botões de canhão sobre a arena aceitam pressionamentos simultâneos. Se a URL de rede estiver inacessível, verifique o firewall do computador e se a rede Wi-Fi permite a comunicação entre dispositivos.
 
 Para ter suporte confiável a Service Worker em um celular físico, use a versão publicada com HTTPS. Um endereço HTTP simples da rede local pode não oferecer suporte ao worker simulado; a interface informa erros de configuração da API, e a jogabilidade continua disponível. Localhost e HTTPS são os ambientes de referência para as APIs.
 
 ## Controles
 
-| Ação | Teclado | Toque |
+| Ação | Teclado | Ponteiro/toque |
 | --- | --- | --- |
-| Avançar | W ou Seta para cima | Avançar |
-| Virar à esquerda | A ou Seta para a esquerda | Esquerda |
-| Virar à direita | D ou Seta para a direita | Direita |
+| Navegar | W/A/D ou setas | Segurar e mover sobre a arena |
 | Ataque frontal | Espaço | Atirar à frente (botão Frente) |
 | Ataque lateral esquerdo | Q | Atirar à esquerda (botão de ataque esquerdo) |
 | Ataque lateral direito | E | Atirar à direita (botão de ataque direito) |
 | Ataque especial | R | Especial |
 | Pausar | Escape | Pausar |
 
-Segure avançar e uma direção ao mesmo tempo para se mover em curva. O navio não dá ré. Segure um ataque para repeti-lo no intervalo configurado. Movimento, rotação e todos os ataques podem ser combinados. Cada arma tem um tempo de recarga independente.
+Segure avançar e uma direção ao mesmo tempo para se mover em curva, ou segure o botão esquerdo do mouse e mova o cursor sobre a arena. O controle por ponteiro define um destino, mas não arrasta nem teleporta o navio: o motor preserva a rotação, a velocidade e as colisões. O navio não dá ré. Segure um ataque para repeti-lo no intervalo configurado. Movimento, rotação e todos os ataques podem ser combinados. Cada arma tem um tempo de recarga independente.
 
 O canhão frontal lança um projétil. Cada ataque lateral lança três projéteis paralelos de posições separadas ao longo do navio. Esquerda e direita são relativas à direção do navio, não à tela. Os projéteis desaparecem no primeiro impacto válido contra um alvo, uma ilha ou o limite da arena, ou quando seu tempo de vida termina. Os disparos do jogador só causam dano aos inimigos; os disparos inimigos só causam dano ao jogador.
 
 Trocar de aba ou tirar o foco do jogo pausa a partida. Selecione **Continuar** explicitamente para prosseguir. Sair do combate abandona a sessão atual.
+
+O som é ativado após a primeira seleção de **Jogar**, conforme a política de autoplay dos navegadores. O botão **Som ativo/Sem som** no cabeçalho silencia ambiente e efeitos e salva essa preferência separadamente das opções de balanceamento. A partida usa os arquivos WAV fornecidos pela Jungle Gaming para oceano, canhões, impactos, colisões, explosões, alertas e estados da sessão.
 
 ## Verificação da jogabilidade
 
@@ -98,7 +98,7 @@ Trocar de aba ou tirar o foco do jogo pausa a partida. Selecione **Continuar** e
 11. Segure as três teclas de ataque; cada arma deve repetir seu ataque de forma independente.
 12. Atire em direção à ilha; os disparos devem parar com um efeito visível de impacto, em vez de atravessá-la.
 13. Pause com disparos em movimento; as posições, os efeitos e os tempos de recarga devem parar. Continue sem pressionar o ataque novamente; uma entrada antiga mantida pressionada não deve voltar a disparar.
-14. No celular, segure o movimento com um dedo e um ataque com outro. Inicie uma nova sessão e verifique que nenhum projétil da sessão anterior permanece.
+14. No celular, arraste sobre a arena com um dedo e pressione um canhão com outro. Inicie uma nova sessão e verifique que nenhum projétil da sessão anterior permanece.
 15. Espere os Perseguidores de velas vermelhas e os Atiradores de velas com caveira. Os Perseguidores perseguem e explodem ao contato; os Atiradores se aproximam e disparam quando estão ao alcance.
 16. Destrua um navio com seus canhões. Ele deve explodir, deixar de participar da partida e conceder exatamente um ponto.
 17. Deixe um Perseguidor colidir com você. A vida deve diminuir, o Perseguidor deve desaparecer e a pontuação não deve aumentar.
@@ -108,6 +108,7 @@ Trocar de aba ou tirar o foco do jogo pausa a partida. Selecione **Continuar** e
 21. Com Corações de vida ativados, espere 15 segundos ativos. Um coração deve aparecer por 10 segundos, continuar disponível quando a vida estiver cheia e restaurar até 20 de vida quando coletado com a vida atual abaixo do máximo.
 22. Com Ataque especial ativado, destrua cinco inimigos com canhões. O HUD e o botão de toque devem mostrar Pronto, e dois anéis pulsantes dourados e verdes devem formar uma aura ao redor do navio; pressione R ou Especial para destruir todos os inimigos visíveis e remover disparos hostis.
 23. Verifique que os inimigos destruídos pelo especial concedem pontos, mas não o recarregam, e que usá-lo em uma arena vazia não consome a carga.
+24. Com o som ativo, verifique oceano, canhões, impactos, explosões, pausa, retomada e conclusão. Silencie no cabeçalho, atualize a página e confirme que a preferência permanece salva.
 
 Comentários úteis incluem pressão dos inimigos, distância segura de surgimento, comportamento de perseguição e desvio, dano, legibilidade dos projéteis e posicionamento dos botões no celular. Os intervalos de movimento e dos canhões foram aprovados durante iterações anteriores e permanecem inalterados.
 

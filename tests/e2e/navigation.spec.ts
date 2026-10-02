@@ -24,7 +24,7 @@ test('entering and abandoning sessions does not duplicate canvases', async ({ pa
   for (let cycle = 0; cycle < 3; cycle += 1) {
     await page.getByRole('button', { name: 'Jogar', exact: true }).click();
     await expect(page.locator('canvas')).toHaveCount(1);
-    await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+    await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();
     await page.getByRole('button', { name: 'Menu principal', exact: true }).click();
     await expect(page.locator('canvas')).toHaveCount(0);
   }
@@ -41,5 +41,5 @@ test('failed textures expose a retry action and recover', async ({ page }) => {
   await page.unroute(asset);
   await page.getByRole('button', { name: 'Tentar novamente', exact: true }).click();
   await expect(page.locator('canvas')).toHaveCount(1);
-  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();
 });

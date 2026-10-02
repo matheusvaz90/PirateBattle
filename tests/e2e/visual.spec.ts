@@ -15,7 +15,7 @@ async function openStableMenu(page: Page, scenario: string) {
 
 async function startGame(page: Page) {
   await page.getByRole('button', { name: 'Jogar', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Atirar à frente', exact: true })).toBeEnabled();
   await expect(page.locator('canvas')).toHaveCount(1);
   await page.evaluate(() => {
     if (!window.__PIRATE_TEST__) throw new Error('Visual gameplay requires npm run build:test.');

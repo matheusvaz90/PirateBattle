@@ -8,41 +8,29 @@ import type { GameAction, GameOptions, GameStatus, HudSnapshot, MatchResult } fr
 import { PauseDialog } from '../components/PauseDialog.tsx';
 import { beginProfile, profileRegistry, readHeap } from '../profiling.ts';
 import type { ProfileSession } from '../../game/profiling.ts';
+import type { AudioController } from '../../audio/AudioController.ts';
 
 interface Props {
   options: GameOptions;
   matchId: string;
+  audio: AudioController;
+  soundEnabled: boolean;
+  onToggleSound: () => void;
   onComplete: (result: MatchResult) => void;
   onMenu: () => void;
 }
 
-const TOUCH_GROUPS: readonly {
-  label: string;
-  controls: readonly { action: GameAction; label: string; accessibleLabel: string; symbol: string }[];
-}[] = [
-  {
-    label: 'Controles de movimento por toque',
-    controls: [
-      { action: 'turnLeft', label: 'Esquerda', accessibleLabel: 'Virar à esquerda', symbol: '↶' },
-      { action: 'moveForward', label: 'Avançar', accessibleLabel: 'Avançar', symbol: '↑' },
-      { action: 'turnRight', label: 'Direita', accessibleLabel: 'Virar à direita', symbol: '↷' },
-    ],
-  },
-  {
-    label: 'Controles de ataque por toque',
-    controls: [
-      { action: 'fireLeft', label: 'Esquerda', accessibleLabel: 'Atirar à esquerda', symbol: '⇐' },
-      { action: 'fireFront', label: 'Frente', accessibleLabel: 'Atirar à frente', symbol: '↑' },
-      { action: 'fireRight', label: 'Direita', accessibleLabel: 'Atirar à direita', symbol: '⇒' },
-    ],
-  },
+const ATTACK_CONTROLS: readonly { action: GameAction; label: string; accessibleLabel: string; icon: string }[] = [
+  { action: 'fireLeft', label: 'Esquerda', accessibleLabel: 'Atirar à esquerda', icon: 'icon_fire_left.png' },
+  { action: 'fireFront', label: 'Frente', accessibleLabel: 'Atirar à frente', icon: 'icon_fire_front.png' },
+  { action: 'fireRight', label: 'Direita', accessibleLabel: 'Atirar à direita', icon: 'icon_fire_right.png' },
 ];
 
 const STATUS_LABELS: Readonly<Record<GameStatus, string>> = {
   ready: 'Pronto', running: 'Navegando', paused: 'Pausado', finished: 'Concluído', abandoned: 'Abandonado',
 };
 
-export function GameScreen({ options, matchId, onComplete, onMenu }: Props) {
+export function GameScreen({ options, matchId, audio, soundEnabled, onToggleSound, onComplete, onMenu }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<GameEngine | null>(null);
   const inputRef = useRef<InputController | null>(null);
@@ -66,6 +54,7 @@ export function GameScreen({ options, matchId, onComplete, onMenu }: Props) {
     let unsubscribe: (() => void) | undefined;
     let profile: ProfileSession | null = null;
     let releaseHud: (() => void) | undefined;
+    let detachAudio: (() => void) | undefined;
 
     async function initialize(hostElement: HTMLDivElement) {
       try {
@@ -78,6 +67,7 @@ export function GameScreen({ options, matchId, onComplete, onMenu }: Props) {
         renderer = nextRenderer;
         const nextInput = new InputController(nextEngine, hostElement, profile);
         input = nextInput;
+        detachAudio = audio.attach(nextEngine);
         engineRef.current = nextEngine;
         inputRef.current = nextInput;
         unsubscribe = nextEngine.subscribe((snapshot) => { if (active) setHud(snapshot); });
@@ -103,6 +93,7 @@ export function GameScreen({ options, matchId, onComplete, onMenu }: Props) {
       detachTestApi?.();
       unsubscribe?.();
       releaseHud?.();
+      detachAudio?.();
       const lastWorld = engine?.getWorld();
       input?.dispose();
       engine?.dispose();
@@ -111,7 +102,7 @@ export function GameScreen({ options, matchId, onComplete, onMenu }: Props) {
       if (engineRef.current === engine) engineRef.current = null;
       if (inputRef.current === input) inputRef.current = null;
     };
-  }, [options, matchId, onComplete, attempt]);
+  }, [options, matchId, audio, onComplete, attempt]);
 
   function retry() {
     setError(null);
@@ -130,35 +121,54 @@ export function GameScreen({ options, matchId, onComplete, onMenu }: Props) {
     inputRef.current?.releasePointer(event.pointerId);
   }
 
+  function beginNavigation(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (!inputRef.current?.beginNavigation(event.pointerId, event.clientX, event.clientY)) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function updateNavigation(event: PointerEvent<HTMLDivElement>) {
+    inputRef.current?.updateNavigation(event.pointerId, event.clientX, event.clientY);
+  }
+
+  function endNavigation(event: PointerEvent<HTMLDivElement>) {
+    inputRef.current?.endNavigation(event.pointerId);
+  }
+
   const remaining = `${Math.floor(hud.remainingSeconds / 60)}:${String(hud.remainingSeconds % 60).padStart(2, '0')}`;
 
   return (
     <main className="game-screen">
       <header className="game-header">
-        <div><p className="eyebrow">SOBREVIVA À FROTA</p><h1>Pirate Battle</h1></div>
-        <div className="header-actions"><button className="button compact secondary" disabled={hud.status !== 'running'} onClick={() => engineRef.current?.pause()}>Pausar</button><button className="button compact secondary" onClick={onMenu}>Menu principal</button></div>
+        <div className="game-brand"><span className="brand-mark" aria-hidden="true">PB</span><div><p className="eyebrow">SOBREVIVA À FROTA</p><h1>Pirate Battle</h1></div></div>
+        <div className="header-actions"><button className="sound-toggle game-sound-toggle" type="button" aria-pressed={soundEnabled} aria-label="Som" onClick={onToggleSound}><span aria-hidden="true">{soundEnabled ? '◖))' : '◖×'}</span></button><button className="button compact secondary" disabled={hud.status !== 'running'} onClick={() => engineRef.current?.pause()}>Pausar</button><button className="button compact secondary" onClick={onMenu}>Menu principal</button></div>
       </header>
       <section className="hud" aria-label="Informações da partida">
-        <span className="hud-label">VIDA DO NAVIO <strong data-testid="ship-health">{hud.health} / {hud.maxHealth}</strong></span>
-        <span className="hud-label" aria-live="polite" aria-atomic="true">PONTUAÇÃO <strong data-testid="score">{hud.score}</strong></span>
-        {options.specialAttackEnabled && <span className={`hud-label special-status${hud.specialReady ? ' ready' : ''}`} aria-live="polite" aria-atomic="true">ESPECIAL <strong data-testid="special-charge">{hud.specialReady ? 'PRONTO' : `${hud.specialCharge} / ${hud.specialRequired}`}</strong></span>}
-        <span className="hud-label">TEMPO RESTANTE <strong data-testid="remaining-time">{remaining}</strong></span>
-        <span className="status-chip" role="status">{loading ? 'Carregando' : error ? 'Falha ao carregar' : STATUS_LABELS[hud.status]}</span>
+        <div className="health-status"><span className="hud-icon heart-icon" aria-hidden="true" /><span className="hud-label">VIDA DO NAVIO <strong data-testid="ship-health">{hud.health} / {hud.maxHealth}</strong></span><span className="health-track" aria-hidden="true"><span style={{ width: `${hud.health / hud.maxHealth * 100}%` }} /></span></div>
+        <div className="hud-counters">
+          <span className="hud-label score-status" aria-live="polite" aria-atomic="true">PONTUAÇÃO <strong data-testid="score">{hud.score}</strong></span>
+          {options.specialAttackEnabled && <span className={`hud-label special-status${hud.specialReady ? ' ready' : ''}`} aria-live="polite" aria-atomic="true">ESPECIAL <strong data-testid="special-charge">{hud.specialReady ? 'PRONTO' : `${hud.specialCharge} / ${hud.specialRequired}`}</strong></span>}
+          <span className="hud-label time-status">TEMPO <strong data-testid="remaining-time">{remaining}</strong></span>
+          <span className="status-chip" role="status">{loading ? 'Carregando' : error ? 'Falha' : STATUS_LABELS[hud.status]}</span>
+        </div>
       </section>
       <section className="arena-shell" aria-label="Arena do jogo">
-        <div className="arena-host" ref={hostRef} tabIndex={0} role="group" aria-label="Controles do navio: W para avançar, A e D para virar, Espaço para atirar à frente, Q e E para atirar à esquerda e à direita, R para usar o especial e Escape para pausar" data-testid="arena" />
+        <div className="arena-host" ref={hostRef} tabIndex={0} role="group" aria-label="Segure e arraste na arena para navegar. W, A e D também movem o navio; Espaço, Q e E disparam; R usa o especial e Escape pausa." data-testid="arena" onPointerDown={beginNavigation} onPointerMove={updateNavigation} onPointerUp={endNavigation} onPointerCancel={endNavigation} onLostPointerCapture={endNavigation} onContextMenu={(event) => event.preventDefault()} />
         {loading && <div className="arena-overlay" role="status"><p className="eyebrow">PREPARANDO SUA VIAGEM</p><h2>Carregando o mar…</h2><progress value={progress} max={100} aria-label="Progresso do carregamento dos recursos" /><span>{progress}%</span></div>}
         {error && <div className="arena-overlay"><h2>Não foi possível zarpar</h2><p role="alert">{error}</p><button className="button primary" onClick={retry}>Tentar novamente</button></div>}
+        <div className="arena-controls">
+          <div className="touch-action-deck" role="group" aria-label="Controles de ataque por toque">
+            <div className="touch-controls">
+              {ATTACK_CONTROLS.map(({ action, label, accessibleLabel, icon }) => <button key={action} className="touch-button attack-button" disabled={hud.status !== 'running'} aria-label={accessibleLabel} onPointerDown={(event) => press(event, action)} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><img src={`${import.meta.env.BASE_URL}assets/png/retina/ui/controls/${icon}`} alt="" aria-hidden="true" />{label}</button>)}
+            </div>
+            {options.specialAttackEnabled && <div className="touch-controls special-controls" role="group" aria-label="Controle de ataque especial por toque"><button className="touch-button special-button" disabled={hud.status !== 'running' || !hud.specialReady} aria-label="Usar ataque especial" onPointerDown={(event) => press(event, 'specialAttack')} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><span aria-hidden="true">✦</span>{hud.specialReady ? 'Especial' : `${hud.specialCharge}/${hud.specialRequired}`}</button></div>}
+          </div>
+        </div>
+        <p className="orientation-hint">Segure e arraste sobre o mar para navegar. Use os botões para atacar.</p>
       </section>
       <footer className="game-footer">
-        <div className="control-deck">
-          {TOUCH_GROUPS.map((group) => <div key={group.label} className="touch-controls" role="group" aria-label={group.label}>
-            {group.controls.map(({ action, label, accessibleLabel, symbol }) => <button key={action} className={`touch-button${action.startsWith('fire') ? ' attack-button' : ''}`} disabled={hud.status !== 'running'} aria-label={accessibleLabel} onPointerDown={(event) => press(event, action)} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><span aria-hidden="true">{symbol}</span>{label}</button>)}
-          </div>)}
-          {options.specialAttackEnabled && <div className="touch-controls special-controls" role="group" aria-label="Controle de ataque especial por toque"><button className="touch-button special-button" disabled={hud.status !== 'running' || !hud.specialReady} aria-label="Usar ataque especial" onPointerDown={(event) => press(event, 'specialAttack')} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><span aria-hidden="true">✦</span>{hud.specialReady ? 'Especial' : `${hud.specialCharge}/${hud.specialRequired}`}</button></div>}
-        </div>
-        <p className="game-help"><kbd>W</kbd> Avançar · <kbd>A</kbd> <kbd>D</kbd> Virar · <kbd>Espaço</kbd> Frente · <kbd>Q</kbd> Esquerda · <kbd>E</kbd> Direita · {options.specialAttackEnabled && <><kbd>R</kbd> Usar especial · </>}<kbd>Esc</kbd> Pausar <span>Destrua cinco inimigos com os canhões para carregar o especial. Segure um ataque de canhão para repetir.</span></p>
-        <p className="orientation-hint">Vire o celular para o modo paisagem para aproveitar melhor os controles.</p>
+        <p className="game-help"><strong>CONTROLES</strong><span>Segure o botão esquerdo e mova o mouse para navegar. <kbd>W</kbd> <kbd>A</kbd> <kbd>D</kbd> também movem · <kbd>Espaço</kbd> Frente · <kbd>Q</kbd> Esquerda · <kbd>E</kbd> Direita · {options.specialAttackEnabled && <><kbd>R</kbd> Especial · </>}<kbd>Esc</kbd> Pausar</span></p>
       </footer>
       {hud.status === 'paused' && <PauseDialog onResume={() => { inputRef.current?.clear(); engineRef.current?.resume(); hostRef.current?.focus({ preventScroll: true }); }} onMenu={onMenu} />}
     </main>

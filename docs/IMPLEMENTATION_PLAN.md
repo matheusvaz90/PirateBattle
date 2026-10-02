@@ -11,13 +11,15 @@ O agente implementa e executa as verificações isoladas/estáticas permitidas. 
 - O React controla telas, diálogos, HUD semântico, opções e botões de toque.
 - Um motor independente de framework controla posições, vida, combate, tempo de simulação, surgimento e pontuação.
 - O PixiJS 8 controla os objetos visuais e projeta o estado do motor. Não há wrapper React para Pixi.
-- Teclado e toque compartilham ações tipadas, com origens rastreadas de forma independente.
+- O menu usa React/CSS e assets estáticos oficiais; gameplay e indicadores permanecem integralmente no PixiJS.
+- A Web Audio API reproduz os WAV fornecidos a partir de eventos tipados do motor. A preferência de som não altera a configuração da partida.
+- Teclado e botões de ataque compartilham ações tipadas; o gesto sobre a arena fornece um destino tipado ao motor, com origens rastreadas de forma independente.
 - Snapshots do React são atualizados apenas em mudanças significativas, não a cada frame.
 - Passo fixo de simulação: 1/60 de segundo. Pausar limpa as entradas e o acumulador.
 - Arena lógica: 1280 × 720, dimensionada com letterbox. O redimensionamento nunca altera as regras.
 - Coordenadas: X para a direita, Y para baixo, direção zero para a direita, radianos e sentido horário positivo.
 - Colisores simples de barcos/ilha; segmentos dos projéteis resolvem o primeiro impacto válido.
-- Menus em CSS, Vite, sem roteador ou biblioteca de estado.
+- Menus em React/CSS com imagens oficiais, Vite, sem roteador ou biblioteca de estado.
 - Opções: duração de 60–180 segundos (padrão 120), intervalo de surgimento de 1–10 segundos (padrão 4).
 - Cada partida recebe um snapshot de configuração independente.
 
@@ -29,7 +31,7 @@ Configuração, scripts, assets, navegação mínima, carregamento/erro/nova ten
 
 ### 2. Navegação jogável
 
-Motor/configuração tipados, loop fixo, movimento, rotação, limites, uma ilha, teclado, toque com múltiplos ponteiros, redimensionamento, observação exclusiva de teste e relógio controlado. O usuário testa movimento em curva, contato com obstáculos, contato com bordas e layout móvel. Publicar snapshots apenas quando o estado exibido mudar.
+Motor/configuração tipados, loop fixo, movimento, rotação, limites, uma ilha, teclado, destino por gesto com múltiplos ponteiros para navegação/ataque, redimensionamento, observação exclusiva de teste e relógio controlado. O usuário testa movimento em curva, contato com obstáculos, contato com bordas e layout móvel. Publicar snapshots apenas quando o estado exibido mudar.
 
 ### 3. Combate
 

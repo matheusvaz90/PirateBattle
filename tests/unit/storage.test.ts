@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createGameConfig, DEFAULT_OPTIONS, isGameOptions } from '../../src/game/config.ts';
-import { loadLastResult, loadOptions, OPTIONS_KEY, RESULT_KEY, saveLastResult, saveOptions } from '../../src/storage/preferences.ts';
+import { AUDIO_KEY, loadAudioEnabled, loadLastResult, loadOptions, OPTIONS_KEY, RESULT_KEY, saveAudioEnabled, saveLastResult, saveOptions } from '../../src/storage/preferences.ts';
 import type { StoragePort } from '../../src/storage/preferences.ts';
 import type { MatchResult } from '../../src/game/types.ts';
 
@@ -54,6 +54,19 @@ test('storage failures do not silently report a successful save', () => {
   assert.ok(saveOptions(DEFAULT_OPTIONS, storage));
   assert.ok(loadOptions(storage).error);
   assert.ok(loadLastResult(storage).error);
+  assert.ok(saveAudioEnabled(false, storage));
+  assert.ok(loadAudioEnabled(storage).error);
+});
+
+test('audio preference is persisted separately from gameplay options', () => {
+  const storage = memoryStorage();
+  assert.deepEqual(loadAudioEnabled(storage), { value: true, error: null });
+  assert.equal(saveAudioEnabled(false, storage), null);
+  assert.deepEqual(loadAudioEnabled(storage), { value: false, error: null });
+  assert.equal(storage.getItem(OPTIONS_KEY), null);
+  storage.setItem(AUDIO_KEY, JSON.stringify({ version: 1, enabled: 'no' }));
+  assert.equal(loadAudioEnabled(storage).value, true);
+  assert.ok(loadAudioEnabled(storage).error);
 });
 
 test('completed result persists its configuration and stable identity', () => {

@@ -2,11 +2,11 @@
 
 ## Escopo atual
 
-O incremento atual implementa o fluxo de jogo/dados, a preparação determinística dos testes visuais e a instrumentação opcional de profiling. A execução no navegador, a revisão das baselines, evidências reais de hardware/desempenho e o deploy continuam pendentes. Este documento diferencia o comportamento implementado do comportamento verificado.
+O incremento atual implementa o fluxo de jogo/dados, a preparação determinística dos testes visuais, a instrumentação opcional de profiling e uma interface naval responsiva. O deploy público está disponível; a execução atual no navegador, a revisão das baselines e evidências reais de hardware/desempenho continuam pendentes. Este documento diferencia o comportamento implementado do comportamento verificado.
 
 ## Responsabilidades
 
-O React controla navegação, opções, diálogos, HUD semântico e botões de toque. O GameEngine é independente de framework e controla o estado e o tempo da simulação, incluindo pickups de vida e carga do especial. O GameRenderer controla os objetos Pixi e os sincroniza com o motor. O InputController traduz origens de teclado e ponteiro em ações sem depender de atualizações por frame no React.
+O React controla telas, opções, diálogos, HUD semântico e botões de ataque por toque. O GameEngine é independente de framework e controla o estado e o tempo da simulação, incluindo o destino de navegação, pickups de vida e carga do especial. O GameRenderer controla exclusivamente os objetos Pixi do gameplay e os sincroniza com o motor. O InputController traduz teclado e coordenadas de ponteiro para ações ou destinos no mundo lógico sem depender de atualizações por frame no React. O menu inicial usa React, CSS e imagens estáticas oficiais; ele não cria outro contexto gráfico antes da arena.
 
 ## Tempo e pausa
 
@@ -16,9 +16,17 @@ O motor usa um passo fixo de simulação de 1/60 de segundo. O tempo decorrido e
 
 As coordenadas usam X para a direita, Y para baixo e radianos no sentido horário a partir da direita. Um mundo lógico fixo de 1280 × 720 é ajustado ao canvas disponível com letterbox. A proporção de pixels do dispositivo controla a densidade do raster, limitada a 2 para reduzir o uso inicial de recursos em dispositivos móveis. O redimensionamento não altera a geometria do mundo. Os barcos usam colisores circulares. O movimento usa velocidades por segundo da configuração; a colisão impede penetração e permite movimento por um eixo válido quando possível.
 
+Teclado e ponteiro são alternativas de navegação. W/A/D e setas produzem as ações de movimento existentes. Manter o botão principal do mouse ou um toque sobre a arena converte a posição da viewport, inclusive o letterbox, para um destino limitado ao mundo lógico. A cada passo fixo, o motor gira pelo caminho angular mais curto e avança na velocidade configurada; soltar o ponteiro remove o destino. O destino nunca altera diretamente a posição do barco e é limpo na pausa, conclusão ou desmontagem.
+
 ## Recursos e Strict Mode
 
 Cada tela de jogo cria seu próprio motor, renderizador, controlador de entrada, callback do ticker e ResizeObserver. A limpeza remove listeners controlados, limpa entradas e entidades do motor, interrompe e destrói a aplicação Pixi e libera objetos visuais. A inicialização assíncrona deve verificar o descarte antes de criar uma sessão, anexar um canvas ou iniciar o ticker. Texturas compartilhadas são reutilizadas por Pixi Assets e não são destruídas com sprites individuais; somente o cache limitado dos treze assets de textura selecionados permanece entre partidas. Os elementos visuais de inimigos, projéteis e efeitos são indexados pelo ID da simulação, reutilizados entre frames e destruídos quando a entidade é removida. Seus mapas são limpos na desmontagem. A geometria da vida é redesenhada apenas quando a vida muda. Texturas danificadas e tints breves fornecem deterioração e feedback de impacto. Água, areia, rocha e coração usam os assets fornecidos em alta resolução; o movimento da água deriva do tempo ativo da simulação e, por isso, congela durante a pausa.
+
+## Menu inicial e áudio
+
+O menu inicial combina a cena de batalha, a moldura, o logotipo e os estados de botão fornecidos no pacote de assets. Os controles continuam elementos HTML semânticos sobre a composição estática, preservando teclado, foco e leitores de tela. Como não existe canvas decorativo, a entrada na partida não precisa liberar outro renderer ou contexto WebGL antes de criar o canvas PixiJS.
+
+O AudioController usa Web Audio API e os WAV fornecidos. O primeiro gesto em Jogar cria/desbloqueia o AudioContext e inicia o carregamento sem bloquear os assets do Pixi. O GameEngine publica eventos tipados de feedback, separados dos snapshots e das regras; um ataque lateral gera um evento de arma mesmo criando três projéteis. O controlador traduz eventos em sons, controla sobreposição, variação, ambiente e alertas únicos. Pausa, abandono e conclusão interrompem o loop do oceano. A preferência de som é persistida em uma chave própria e não participa da configuração, do resultado nem do agrupamento do ranking.
 
 ## Sincronização da interface
 
@@ -26,7 +34,7 @@ O motor emite snapshots do HUD somente quando o tempo exibido, vida, pontuação
 
 ## Armazenamento local
 
-As opções são validadas na leitura e na escrita. Opções da versão 1 migram para a versão 2 com os recursos aprovados de vida e especial ativados. Resultados concluídos por tempo esgotado/morte são persistidos; sair do gameplay abandona a sessão. Falhas de armazenamento são retornadas à interface em vez de relatadas silenciosamente como sucesso. A configuração atual do resultado usa `survival-v2` e contém todos os parâmetros de armas, inimigos, surgimento, navegação, pickup, especial e feedback. Resultados existentes de `combat-v1` continuam válidos e preservam sua chave independente de ranking. Resultados anteriores, apenas de navegação, são rejeitados com um aviso explícito e não são excluídos durante a leitura.
+As opções são validadas na leitura e na escrita. Opções da versão 1 migram para a versão 2 com os recursos aprovados de vida e especial ativados. A preferência booleana de áudio usa armazenamento versionado separado. Resultados concluídos por tempo esgotado/morte são persistidos; sair do gameplay abandona a sessão. Falhas de armazenamento são retornadas à interface em vez de relatadas silenciosamente como sucesso. A configuração atual do resultado usa `survival-v2` e contém todos os parâmetros de armas, inimigos, surgimento, navegação, pickup, especial e feedback. Resultados existentes de `combat-v1` continuam válidos e preservam sua chave independente de ranking. Resultados anteriores, apenas de navegação, são rejeitados com um aviso explícito e não são excluídos durante a leitura.
 
 ## Canhões e colisão de projéteis
 
