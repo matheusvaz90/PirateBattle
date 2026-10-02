@@ -2,7 +2,7 @@
 
 ## Marco atual
 
-A implementação do jogo e dos dados está completa o suficiente para a verificação da entrega. O usuário confirmou o gameplay, salvamento das partidas, ranking e a direção visual anterior. Pickups de vida, ataque especial carregado, polimento focado da água/ilha e uma interface completa em português brasileiro estão implementados na versão de balanceamento `survival-v2`. Existem seis referências visuais anteriores para Darwin e a última comparação delas passou, mas elas antecedem essas mudanças intencionais de texto/visual e precisam de revisão. Evidências atualizadas no navegador, medições de hardware e deploy público continuam pendentes.
+A implementação do jogo e dos dados está completa o suficiente para a verificação da entrega. O usuário confirmou o gameplay, salvamento das partidas, ranking e a direção visual anterior. Pickups de vida, ataque especial carregado, polimento focado da água/ilha e uma interface completa em português brasileiro estão implementados na versão de balanceamento `survival-v2`. A versão pública está disponível no Cloudflare. Existem seis referências visuais anteriores para Darwin e a última comparação delas passou, mas elas antecedem essas mudanças intencionais de texto/visual e precisam de revisão. Evidências funcionais atualizadas no navegador e medições de hardware continuam pendentes.
 
 ## Implementação
 
@@ -32,7 +32,7 @@ A implementação do jogo e dos dados está completa o suficiente para a verific
 - O dimensionamento responsivo da arena lógica e os controles de toque em paisagem estão implementados.
 - Um build dedicado de teste ativa cenários iniciais com seed e observação de cópias do estado. Seu relógio congela antes do início do gameplay, impedindo que mortes das fixtures disputem com a configuração do teste. Entradas e avanço do relógio exercitam o motor/renderização reais. Um build normal de produção exclui o observador e o módulo de cenários.
 - Todos os arquivos Markdown mantidos pelo projeto usam português brasileiro, incluindo README, arquitetura, plano, progresso, procedimento de profiling, instruções de implementação e proveniência dos assets. Comandos, caminhos, variáveis de ambiente, rótulos externos, nomes próprios e identificadores técnicos estáveis permanecem literais quando necessário.
-- O README usa a URL real `matheusvaz90/PirateBattle` para clonagem e documenta a publicação estática no Cloudflare Pages. O Node 24 está fixado em `.node-version`, e `public/_headers` evita cache obsoleto do Service Worker simulado. A URL pública ainda depende do primeiro deploy pelo painel da Cloudflare.
+- O README usa a URL real `matheusvaz90/PirateBattle` para clonagem e documenta a publicação no Cloudflare Worker com assets estáticos. O Node 24 está fixado em `.node-version`, e `public/_headers` evita cache obsoleto do Service Worker simulado. A versão pública está disponível em `https://piratebattle.matheusvaz90.workers.dev/`.
 - As instruções de configuração do GitHub usam a URL HTTPS real do repositório e a pasta de checkout `PirateBattle`, sem depender de caminhos específicos da máquina. As instruções de testes controlados no navegador incluem comandos para macOS/Linux e Windows PowerShell.
 - Uma identidade local e persistente do Captain, abas paginadas de Ranking/Histórico de partidas, cabeçalhos semânticos de tabela, navegação por teclado nas abas e estados de carregamento/vazio/erro/atualização em segundo plano estão implementados.
 - Contratos compartilhados e validados, além de chaves canônicas da configuração completa, comparam configurações equivalentes sem depender da ordem das propriedades nem sofrer colisões de hash. O ranking usa pontuação/data/ID para desempate; o histórico mostra data UTC, duração, motivo e configurações.
@@ -67,17 +67,18 @@ A implementação do jogo e dos dados está completa o suficiente para a verific
 - Descoberta visual dedicada: 6 casos no Chromium para desktop/dispositivo móvel, cobrindo menu, arena e resultado. Descoberta não significa geração ou comparação de capturas de tela.
 - O build final gerado é um build normal de produção: símbolos/módulo do observador de teste do gameplay estão ausentes, enquanto mockServiceWorker.js e o módulo mock de rede obrigatório estão presentes.
 - Nenhum servidor da aplicação ou navegador foi iniciado pelo agente.
+- O deploy público no Cloudflare foi verificado por HTTP. A página principal, os bundles e `mockServiceWorker.js` responderam com status 200; o worker foi servido como JavaScript com `Cache-Control: no-cache, no-store, must-revalidate`. Essa verificação confirma a disponibilidade estática, não o gameplay no navegador.
 - Os sete arquivos Markdown mantidos pelo projeto receberam revisão estática depois da localização. Seus 28 delimitadores de blocos de código estão balanceados e os cinco links locais apontam para destinos existentes. A busca residual não encontrou títulos ou frases em inglês; termos técnicos, nomes externos e identificadores literais foram preservados intencionalmente. Nenhuma verificação de execução foi necessária para essas alterações apenas documentais.
 - Verificação do usuário antes deste incremento: bloqueio da ilha, estilo visual, verificações dos canhões, intervalos de ataque, salvamento e ranking foram aprovados; o combate foi relatado como funcional e agradavelmente desafiador. O usuário aprovou as regras de pickup, especial, água e ilha, mas ainda não avaliou sua implementação.
 - Existem seis PNG visuais e um estado visual anterior aprovado. Eles não verificam este build alterado. Nenhum resultado funcional atual no navegador ou trace foi executado pelo agente. Gameplay atualizado em desktop/dispositivo móvel, referências visuais, medições reais de frames/memória e evidências do ciclo de vida continuam pendentes.
 
 ## Próxima tarefa concreta
 
-Próxima tarefa concreta: o usuário deve jogar o build atual e verificar o ajuste dos textos em português, a aura do especial pronto, coleta do coração, ativação por R/toque, movimento da água, emendas da ilha e controles móveis. Depois, deve revisar/atualizar todas as referências para Darwin, executar novamente as suítes visuais e funcionais e coletar profiling do build otimizado com `profile=1` antes de um deploy público explicitamente autorizado.
+Próxima tarefa concreta: o usuário deve jogar a versão pública e verificar o ajuste dos textos em português, a aura do especial pronto, coleta do coração, ativação por R/toque, movimento da água, emendas da ilha, controles móveis, ranking e histórico. Depois, deve revisar/atualizar todas as referências para Darwin, executar novamente as suítes visuais e funcionais e coletar profiling do build otimizado com `profile=1`.
 
 ## Limitações conhecidas
 
-- Gameplay, integração da API, preparação visual e instrumentação de profiling estão implementados; a execução/evidências obrigatórias e o deploy público continuam pendentes.
+- Gameplay, integração da API, preparação visual, instrumentação de profiling e deploy público estão implementados; a execução e as evidências funcionais/visuais obrigatórias continuam pendentes.
 - O estado da API é local à origem e não fornece serviço multiplayer remoto compartilhado nem garantias transacionais entre abas. O histórico do Captain com múltiplas páginas é composto explicitamente por fixtures simuladas.
 - O cenário Vazio remove fixtures, não registros confirmados do usuário. Redefina os dados de demonstração confirmados antes de testar listas completamente vazias; registros pendentes são preservados intencionalmente.
 - Uma falha de escrita no armazenamento do navegador não garante persistência até que o armazenamento se recupere; a fila informa isso e impede o envio de um resultado não persistido.
@@ -86,10 +87,10 @@ Próxima tarefa concreta: o usuário deve jogar o build atual e verificar o ajus
 - Toda recuperação extrema entre frames além de 0,25 segundo é descartada; o tempo ativo é o tempo simulado, não o tempo decorrido no relógio real.
 - A colisão usa uma aproximação circular dos desenhos fornecidos do barco e da ilha; a sensação visual precisa da avaliação do usuário.
 - A cobertura de toque com dois ponteiros emulado pelo navegador e de combate inimigo está criada; a execução e o teste físico do combate em dispositivo móvel continuam pendentes.
-- Os PNG visuais existentes antecedem a mudança intencional na água/ilha/HUD. Relatórios/traces atuais do navegador, JSON de profiling/investigação do heap e deploy ainda não existem. Uma execução de três minutos pode exigir novas tentativas se o barco morrer cedo; nenhum atalho de gameplay foi introduzido para o profiling.
+- Os PNG visuais existentes antecedem a mudança intencional na água/ilha/HUD. Relatórios/traces atuais do navegador e JSON de profiling/investigação do heap ainda não existem. Uma execução de três minutos pode exigir novas tentativas se o barco morrer cedo; nenhum atalho de gameplay foi introduzido para o profiling.
 - Estimativas do heap são opcionais/aproximadas e excluem memória da GPU. Contadores de leases são contabilização explícita, não descoberta automática de vazamentos. O profiling retém dados compactos do relatório até a atualização; exporte antes de atualizar.
 - Nenhuma licença upstream separada para os assets foi encontrada na raiz inspecionada; a exigência de uso dos assets e a fonte do desafio estão documentadas sem declarar direitos mais amplos de redistribuição.
 
 ## Entrega restante
 
-A avaliação do usuário sobre o polimento implementado, evidências/referências atualizadas do navegador, profiling, deploy público e revisão final continuam pendentes. Consulte IMPLEMENTATION_PLAN.md para os critérios de aceitação. Não marque o desafio como concluído antes de existirem esses itens obrigatórios da entrega.
+A avaliação do usuário sobre o polimento implementado, evidências/referências atualizadas do navegador, profiling e revisão final continuam pendentes. O deploy público está disponível no Cloudflare. Consulte IMPLEMENTATION_PLAN.md para os critérios de aceitação. Não marque o desafio como concluído antes de existirem os demais itens obrigatórios da entrega.

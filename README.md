@@ -2,9 +2,13 @@
 
 Um jogo arcade naval desenvolvido de forma incremental para o [desafio da Jungle Gaming](https://github.com/junglegaming/game-developer-challenge).
 
+## Jogue online
+
+Acesse a versão publicada: [Pirate Battle no Cloudflare](https://piratebattle.matheusvaz90.workers.dev/).
+
 ## Versão atual
 
-A partida para um jogador, os itens de recuperação de vida, o ataque especial carregado, o ranking e o histórico paginados, os envios pendentes persistentes e os cenários reproduzíveis de falha de rede estão implementados. React/PixiJS cuidam da jogabilidade e da interface; TanStack Query e Axios consomem APIs REST interceptadas pelo MSW. Evidências atualizadas de navegador, análise de desempenho, publicação e acabamento final continuam pendentes. Consulte [o plano de implementação](docs/IMPLEMENTATION_PLAN.md) e [o progresso atual](docs/PROGRESS.md) antes de continuar o desenvolvimento.
+A partida para um jogador, os itens de recuperação de vida, o ataque especial carregado, o ranking e o histórico paginados, os envios pendentes persistentes e os cenários reproduzíveis de falha de rede estão implementados. React/PixiJS cuidam da jogabilidade e da interface; TanStack Query e Axios consomem APIs REST interceptadas pelo MSW. A versão pública está hospedada no Cloudflare. Evidências atualizadas de navegador, análise de desempenho e acabamento final continuam pendentes. Consulte [o plano de implementação](docs/IMPLEMENTATION_PLAN.md) e [o progresso atual](docs/PROGRESS.md) antes de continuar o desenvolvimento.
 
 ## Comece aqui: execute o jogo
 
@@ -334,25 +338,24 @@ npm run preview
 
 Abra **http://localhost:4173**. O comando de build compila a aplicação; a pré-visualização serve os arquivos compilados. A pré-visualização não atualiza os arquivos-fonte automaticamente: gere o build novamente após alterações.
 
-## Publicação no Cloudflare Pages
+## Publicação no Cloudflare
 
-O projeto gera um site estático e não precisa de Docker nem de um servidor próprio em produção. A publicação recomendada conecta este repositório do GitHub ao Cloudflare Pages, que executa o build e hospeda o conteúdo de `dist/` com HTTPS.
+O projeto gera um site estático e não precisa de Docker nem de um servidor próprio em produção. A versão pública está hospedada como um Cloudflare Worker com assets estáticos em [piratebattle.matheusvaz90.workers.dev](https://piratebattle.matheusvaz90.workers.dev/).
 
-No painel da Cloudflare, abra **Workers & Pages**, crie uma aplicação do tipo **Pages**, conecte o GitHub e selecione o repositório `matheusvaz90/PirateBattle`. Use estas configurações:
+A integração configurada no painel da Cloudflare conecta o repositório `matheusvaz90/PirateBattle`, executa o build do Vite e publica o conteúdo de `dist/` com HTTPS. A configuração relevante é:
 
 | Campo | Valor |
 | --- | --- |
-| Nome do projeto | `pirate-battle` |
-| Branch de produção | branch principal do repositório |
-| Framework preset | Vite |
+| Nome do projeto | `piratebattle` |
+| Branch de produção | `main` |
 | Comando de build | `npm run build` |
 | Diretório de saída | `dist` |
 | Diretório raiz | `/` |
 | Versão do Node.js | 24, definida em `.node-version` |
 
-Depois do primeiro deploy, a Cloudflare fornece uma URL HTTPS no domínio `pages.dev`. Cada push posterior na branch de produção inicia um novo build e publica a versão aprovada. O arquivo `public/_headers` impede que uma versão antiga do Service Worker da API simulada permaneça em cache.
+O arquivo `public/_headers` impede que uma versão antiga do Service Worker da API simulada permaneça em cache. O deploy publicado foi verificado por HTTP: a página, os bundles e `mockServiceWorker.js` responderam com sucesso, e o worker recebeu o cabeçalho de cache esperado.
 
-Após a publicação, verifique o carregamento dos assets, uma partida completa, ranking, histórico, atualização da página e cenários de rede. Adicione a URL final ao campo **Website** da seção **About** no GitHub e ao início deste README.
+A validação funcional no navegador continua separada: abra a versão pública e verifique o carregamento dos assets, uma partida completa, ranking, histórico, atualização da página e cenários de rede.
 
 ## Solução de problemas
 
@@ -368,11 +371,10 @@ Após a publicação, verifique o carregamento dos assets, uma partida completa,
 
 ## Trabalho restante para a entrega
 
-Execução/evidências no navegador, PNGs revisados/versionados, resultados reais de análise de desempenho, publicação no Cloudflare Pages, revisão final da entrega e acabamento solicitado continuam registrados em `docs/PROGRESS.md`.
+Execução/evidências no navegador, PNGs revisados/versionados, resultados reais de análise de desempenho, revisão final da entrega e acabamento solicitado continuam registrados em `docs/PROGRESS.md`.
 
 ## Recursos e arquitetura
 
 Os recursos fornecidos ficam em `public/assets/`. Consulte [a procedência dos recursos](public/assets/ASSET_SOURCES.md) para ver a origem e a situação das licenças. Nenhuma licença dos recursos é inferida pelo fato de o repositório ser público.
 
 Consulte [ARCHITECTURE.md](ARCHITECTURE.md) para ver a separação entre engine/renderização, tempo, entrada, propriedade de recursos e integração de dados planejada.
-# PirateBattle
