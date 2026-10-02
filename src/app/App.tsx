@@ -100,7 +100,7 @@ export function App() {
             </div>
           </section>
           <section className="control-guide" id="comando" aria-labelledby="controls-heading">
-             <div><p className="eyebrow"><span />DOMINE O CONVÉS</p><h2 id="controls-heading">Você está no comando.</h2><p>No computador, mova o mouse para guiar e segure W para avançar. No celular, arraste sobre a arena e use o deck de canhões abaixo dela.</p></div>
+             <div><p className="eyebrow"><span />DOMINE O CONVÉS</p><h2 id="controls-heading">Você está no comando.</h2><p>No computador, mova o mouse para guiar e segure W para avançar. No celular, use o joystick e os canhões no deck abaixo da arena.</p></div>
             <dl className="key-guide">
                <div><dt><kbd>W</kbd> / <kbd>↑</kbd></dt><dd>Avançar</dd></div>
                <div><dt><kbd>A</kbd> <kbd>D</kbd></dt><dd>Virar à esquerda / direita</dd></div>
