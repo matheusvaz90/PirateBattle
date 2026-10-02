@@ -14,14 +14,12 @@ Você não precisa de um editor de engine de jogos nem de um backend. O jogo é 
 
 Instale o [Git](https://git-scm.com/downloads) caso ele ainda não esteja disponível. Abra um terminal na pasta onde deseja manter o projeto e clone este repositório:
 
-Substitua `YOUR_GITHUB_USERNAME` e `YOUR_REPOSITORY` pelo proprietário e pelo nome do repositório exibidos na URL deste repositório no GitHub. Você também pode copiar a URL HTTPS de clonagem pelo botão **Code** do GitHub.
-
 ```sh
-git clone https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY.git pirate-battle
-cd pirate-battle
+git clone https://github.com/matheusvaz90/PirateBattle.git
+cd PirateBattle
 ```
 
-O último argumento cria uma pasta local chamada `pirate-battle`, independentemente do nome do repositório. Execute todos os comandos abaixo a partir dessa pasta, que contém `package.json`.
+Execute todos os comandos abaixo a partir da pasta `PirateBattle`, que contém `package.json`.
 
 Como alternativa, selecione **Code → Download ZIP** no GitHub, extraia o arquivo e abra um terminal na pasta extraída. Você pode abrir o projeto no editor de sua preferência e usar o terminal integrado dele.
 
@@ -336,6 +334,26 @@ npm run preview
 
 Abra **http://localhost:4173**. O comando de build compila a aplicação; a pré-visualização serve os arquivos compilados. A pré-visualização não atualiza os arquivos-fonte automaticamente: gere o build novamente após alterações.
 
+## Publicação no Cloudflare Pages
+
+O projeto gera um site estático e não precisa de Docker nem de um servidor próprio em produção. A publicação recomendada conecta este repositório do GitHub ao Cloudflare Pages, que executa o build e hospeda o conteúdo de `dist/` com HTTPS.
+
+No painel da Cloudflare, abra **Workers & Pages**, crie uma aplicação do tipo **Pages**, conecte o GitHub e selecione o repositório `matheusvaz90/PirateBattle`. Use estas configurações:
+
+| Campo | Valor |
+| --- | --- |
+| Nome do projeto | `pirate-battle` |
+| Branch de produção | branch principal do repositório |
+| Framework preset | Vite |
+| Comando de build | `npm run build` |
+| Diretório de saída | `dist` |
+| Diretório raiz | `/` |
+| Versão do Node.js | 24, definida em `.node-version` |
+
+Depois do primeiro deploy, a Cloudflare fornece uma URL HTTPS no domínio `pages.dev`. Cada push posterior na branch de produção inicia um novo build e publica a versão aprovada. O arquivo `public/_headers` impede que uma versão antiga do Service Worker da API simulada permaneça em cache.
+
+Após a publicação, verifique o carregamento dos assets, uma partida completa, ranking, histórico, atualização da página e cenários de rede. Adicione a URL final ao campo **Website** da seção **About** no GitHub e ao início deste README.
+
 ## Solução de problemas
 
 - **Porta já em uso:** outro terminal talvez já esteja executando o servidor. Use esse servidor ou encerre-o com Control + C antes de iniciar outro.
@@ -350,7 +368,7 @@ Abra **http://localhost:4173**. O comando de build compila a aplicação; a pré
 
 ## Trabalho restante para a entrega
 
-Execução/evidências no navegador, PNGs revisados/versionados, resultados reais de análise de desempenho, publicação, revisão final da entrega e acabamento solicitado continuam registrados em `docs/PROGRESS.md`.
+Execução/evidências no navegador, PNGs revisados/versionados, resultados reais de análise de desempenho, publicação no Cloudflare Pages, revisão final da entrega e acabamento solicitado continuam registrados em `docs/PROGRESS.md`.
 
 ## Recursos e arquitetura
 
