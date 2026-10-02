@@ -8,7 +8,7 @@ Acesse a versão publicada: [Pirate Battle no Cloudflare](https://piratebattle.m
 
 ## Versão atual
 
-A partida para um jogador, os itens de recuperação de vida, o ataque especial carregado, o áudio, o ranking e o histórico paginados, os envios pendentes persistentes e os cenários reproduzíveis de falha de rede estão implementados. React controla a interface, PixiJS renderiza exclusivamente o gameplay e os assets oficiais formam o menu inicial estático; TanStack Query e Axios consomem APIs REST interceptadas pelo MSW. A versão pública anterior está hospedada no Cloudflare, mas o redesign local ainda não foi publicado. Evidências atualizadas de navegador, análise de desempenho e acabamento final continuam pendentes. Consulte [o plano de implementação](docs/IMPLEMENTATION_PLAN.md) e [o progresso atual](docs/PROGRESS.md) antes de continuar o desenvolvimento.
+A partida para um jogador, os itens de recuperação de vida, o ataque especial carregado, o áudio, o ranking e o histórico paginados, os envios pendentes persistentes e os cenários reproduzíveis de falha de rede estão implementados. React controla a interface, PixiJS renderiza exclusivamente o gameplay e os assets oficiais formam o menu inicial estático; TanStack Query e Axios consomem APIs REST interceptadas pelo MSW. A branch `main` é publicada automaticamente no Cloudflare, enquanto evidências atualizadas de navegador e análise de desempenho continuam pendentes. Consulte [o plano de implementação](docs/IMPLEMENTATION_PLAN.md) e [o progresso atual](docs/PROGRESS.md) antes de continuar o desenvolvimento.
 
 ## Comece aqui: execute o jogo
 
@@ -345,7 +345,7 @@ Abra **http://localhost:4173**. O comando de build compila a aplicação; a pré
 
 O projeto gera um site estático e não precisa de Docker nem de um servidor próprio em produção. A versão pública está hospedada como um Cloudflare Worker com assets estáticos em [piratebattle.matheusvaz90.workers.dev](https://piratebattle.matheusvaz90.workers.dev/).
 
-A integração configurada no painel da Cloudflare conecta o repositório `matheusvaz90/PirateBattle`, executa o build do Vite e publica o conteúdo de `dist/` com HTTPS. A configuração relevante é:
+A integração configurada no painel da Cloudflare conecta o repositório `matheusvaz90/PirateBattle`. Cada push na branch `main` executa automaticamente o build do Vite e publica o conteúdo de `dist/` com HTTPS. A configuração relevante é:
 
 | Campo | Valor |
 | --- | --- |
@@ -356,9 +356,29 @@ A integração configurada no painel da Cloudflare conecta o repositório `mathe
 | Diretório raiz | `/` |
 | Versão do Node.js | 24, definida em `.node-version` |
 
+Tags registram versões do produto, mas não são o gatilho do deploy: a publicação acompanha a branch `main`. O estado de cada versão e suas alterações ficam em [CHANGELOG.md](CHANGELOG.md).
+
 O arquivo `public/_headers` impede que uma versão antiga do Service Worker da API simulada permaneça em cache. O deploy publicado foi verificado por HTTP: a página, os bundles e `mockServiceWorker.js` responderam com sucesso, e o worker recebeu o cabeçalho de cache esperado.
 
 A validação funcional no navegador continua separada: abra a versão pública e verifique o carregamento dos assets, uma partida completa, ranking, histórico, atualização da página e cenários de rede.
+
+## Versionamento e commits
+
+O projeto usa versionamento semântico e tags anotadas no formato `vMAJOR.MINOR.PATCH`. Funcionalidades compatíveis incrementam `MINOR`, correções compatíveis incrementam `PATCH` e mudanças incompatíveis incrementam `MAJOR`; antes da versão 1.0, alterações incompatíveis podem avançar `MINOR`.
+
+Novos commits seguem `type(scope): description`, com a descrição técnica em inglês:
+
+| Tipo | Uso |
+| --- | --- |
+| `feat` | Nova funcionalidade |
+| `fix` | Correção de comportamento |
+| `perf` | Otimização comprovada por medição |
+| `refactor` | Mudança interna sem alterar comportamento |
+| `test` | Cobertura automatizada |
+| `docs` | Documentação |
+| `chore` | Manutenção e preparação de release |
+
+Commits de merge preservam a mensagem automática `Merge ...`. O histórico publicado não é reescrito para renomear commits antigos.
 
 ## Solução de problemas
 
