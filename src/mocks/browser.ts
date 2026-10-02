@@ -24,5 +24,4 @@ export function startApiMocks(): Promise<void> {
 }
 
 export function setMockScenario(scenario: NetworkScenario): void { scenarios.set(scenario); }
-export function getMockScenario(): NetworkScenario { return scenarios.get(); }
 export function resetMockData(): void { store.reset(); scenarios.set('success'); }

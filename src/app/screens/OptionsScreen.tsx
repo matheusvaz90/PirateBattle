@@ -27,7 +27,7 @@ export function OptionsScreen({ options, onSave, onCancel }: Props) {
   }
 
   return (
-    <section className="panel options-panel" aria-labelledby="options-heading">
+    <section className="panel" aria-labelledby="options-heading">
       <p className="eyebrow">DEFINA SUA ROTA</p><h1 id="options-heading">Opções</h1>
       <p>Salvo neste navegador. As mudanças valem a partir da próxima partida.</p>
       <form onSubmit={submit} noValidate>

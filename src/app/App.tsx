@@ -117,7 +117,7 @@ export function App() {
         </>
       )}
       {screen.type === 'result' && (
-        <section className="panel result-panel" aria-labelledby="result-heading">
+        <section className="panel" aria-labelledby="result-heading">
           <p className="eyebrow">VIAGEM CONCLUÍDA</p>
           <h1 id="result-heading">{screen.result.endReason === 'death' ? 'Seu navio afundou.' : 'De volta ao porto.'}</h1>
           <p>{screen.result.endReason === 'death' ? 'Seu navio ficou sem vida. Uma nova viagem espera por você.' : 'Sua partida terminou porque o tempo acabou.'}</p>

@@ -20,7 +20,6 @@ export class InputController {
   private readonly pointers = new Map<number, GameAction>();
   private readonly joystickActions = new Set<GameAction>();
   private joystickPointer: number | null = null;
-  private navigationPointer: number | null = null;
   private readonly unsubscribe: () => void;
   private readonly releases: (() => void)[] = [];
   private disposed = false;
@@ -76,35 +75,14 @@ export class InputController {
     this.sync();
   }
 
-  beginNavigation(pointerId: number, clientX: number, clientY: number): boolean {
-    if (this.engine.getHud().status !== 'running' || this.navigationPointer !== null) return false;
-    const target = this.toWorldPoint(clientX, clientY);
-    if (!target) return false;
-    this.navigationPointer = pointerId;
-    this.engine.setNavigationTarget({ ...target, autoAdvance: true, steeringScale: 1 });
-    return true;
-  }
-
-  updateNavigation(pointerId: number, clientX: number, clientY: number): void {
-    if (this.navigationPointer !== pointerId) return;
-    const target = this.toWorldPoint(clientX, clientY, true);
-    this.engine.setNavigationTarget(target ? { ...target, autoAdvance: true, steeringScale: 1 } : null);
-  }
-
-  endNavigation(pointerId: number): void {
-    if (this.navigationPointer !== pointerId) return;
-    this.navigationPointer = null;
-    this.engine.setNavigationTarget(null);
-  }
-
   steerWithMouse(clientX: number, clientY: number): void {
-    if (this.navigationPointer !== null || this.engine.getHud().status !== 'running') return;
-    const target = this.toWorldPoint(clientX, clientY, true);
+    if (this.engine.getHud().status !== 'running') return;
+    const target = this.toWorldPoint(clientX, clientY);
     this.engine.setNavigationTarget(target ? { ...target, autoAdvance: false, steeringScale: MOUSE_STEERING_SCALE } : null);
   }
 
   clearMouseSteering(): void {
-    if (this.navigationPointer === null) this.engine.setNavigationTarget(null);
+    this.engine.setNavigationTarget(null);
   }
 
   clear(): void {
@@ -112,7 +90,6 @@ export class InputController {
     this.pointers.clear();
     this.joystickActions.clear();
     this.joystickPointer = null;
-    this.navigationPointer = null;
     this.engine.setNavigationTarget(null);
     this.sync();
   }
@@ -176,7 +153,7 @@ export class InputController {
     this.engine.setActions(actions);
   }
 
-  private toWorldPoint(clientX: number, clientY: number, clamp = false): { x: number; y: number } | null {
+  private toWorldPoint(clientX: number, clientY: number): { x: number; y: number } | null {
     const rect = this.host.getBoundingClientRect();
     const scale = Math.min(rect.width / this.engine.config.arena.width, rect.height / this.engine.config.arena.height);
     if (!Number.isFinite(scale) || scale <= 0) return null;
@@ -186,7 +163,6 @@ export class InputController {
     const top = rect.top + (rect.height - worldHeight) / 2;
     const x = (clientX - left) / scale;
     const y = (clientY - top) / scale;
-    if (!clamp && (x < 0 || y < 0 || x > this.engine.config.arena.width || y > this.engine.config.arena.height)) return null;
     return {
       x: Math.max(0, Math.min(this.engine.config.arena.width, x)),
       y: Math.max(0, Math.min(this.engine.config.arena.height, y)),
