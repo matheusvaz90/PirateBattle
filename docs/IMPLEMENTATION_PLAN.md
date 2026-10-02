@@ -13,7 +13,7 @@ O agente implementa e executa as verificações isoladas/estáticas permitidas. 
 - O PixiJS 8 controla os objetos visuais e projeta o estado do motor. Não há wrapper React para Pixi.
 - O menu usa React/CSS e assets estáticos oficiais; gameplay e indicadores permanecem integralmente no PixiJS.
 - A Web Audio API reproduz os WAV fornecidos a partir de eventos tipados do motor. A preferência de som não altera a configuração da partida.
-- Teclado e botões de ataque compartilham ações tipadas; mouse e toque fornecem um destino tipado com propulsão manual ou automática, mantendo as origens de entrada independentes.
+- Teclado, joystick e botões de ataque compartilham ações tipadas; o mouse fornece um destino tipado com propulsão manual, mantendo as origens de entrada independentes.
 - Snapshots do React são atualizados apenas em mudanças significativas, não a cada frame.
 - Passo fixo de simulação: 1/60 de segundo. Pausar limpa as entradas e o acumulador.
 - Arena lógica: 1280 × 720, dimensionada com letterbox. O redimensionamento nunca altera as regras.
@@ -31,7 +31,7 @@ Configuração, scripts, assets, navegação mínima, carregamento/erro/nova ten
 
 ### 2. Navegação jogável
 
-Motor/configuração tipados, loop fixo, movimento, rotação, limites, uma ilha, teclado, leme por mouse com propulsão por W, destino automático por toque com múltiplos ponteiros para navegação/ataque, redimensionamento, observação exclusiva de teste e relógio controlado. O usuário testa movimento em curva, contato com obstáculos, contato com bordas e layout móvel. Publicar snapshots apenas quando o estado exibido mudar.
+Motor/configuração tipados, loop fixo, movimento, rotação, limites, uma ilha, teclado, leme por mouse com propulsão por W, joystick móvel fora da arena com múltiplos ponteiros para navegação/ataque, redimensionamento, observação exclusiva de teste e relógio controlado. O usuário testa movimento em curva, contato com obstáculos, contato com bordas e layout móvel. Publicar snapshots apenas quando o estado exibido mudar.
 
 ### 3. Combate
 

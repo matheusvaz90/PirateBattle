@@ -8,7 +8,7 @@ Acesse a versão publicada: [Pirate Battle no Cloudflare](https://piratebattle.m
 
 ## Versão atual
 
-A partida para um jogador, os itens de recuperação de vida, o ataque especial carregado, o áudio, o ranking e o histórico paginados, os envios pendentes persistentes e os cenários reproduzíveis de falha de rede estão implementados. React controla a interface, PixiJS renderiza exclusivamente o gameplay e os assets oficiais formam o menu inicial estático; TanStack Query e Axios consomem APIs REST interceptadas pelo MSW. A branch `main` é publicada automaticamente no Cloudflare, enquanto evidências atualizadas de navegador e análise de desempenho continuam pendentes. Consulte [o plano de implementação](docs/IMPLEMENTATION_PLAN.md) e [o progresso atual](docs/PROGRESS.md) antes de continuar o desenvolvimento.
+A versão `0.2.0` implementa a partida para um jogador, itens de recuperação de vida, ataque especial carregado, áudio, ranking e histórico paginados, envios pendentes persistentes e cenários reproduzíveis de falha de rede. React controla a interface, PixiJS renderiza exclusivamente o gameplay e os assets oficiais formam o menu inicial estático; TanStack Query e Axios consomem APIs REST interceptadas pelo MSW. A branch `main` é publicada automaticamente no Cloudflare, enquanto evidências atualizadas de navegador e análise de desempenho continuam pendentes. Consulte [os patch notes](CHANGELOG.md), [o plano de implementação](docs/IMPLEMENTATION_PLAN.md) e [o progresso atual](docs/PROGRESS.md) antes de continuar o desenvolvimento.
 
 ## Comece aqui: execute o jogo
 
@@ -60,7 +60,7 @@ Não abra `index.html` diretamente: o projeto precisa do servidor Vite para reso
 
 Conecte o celular e o computador à mesma rede Wi-Fi. Com `npm run dev` em execução, abra no celular a URL de **Network** exibida pelo Vite. `localhost` no celular se refere ao próprio celular, não ao computador.
 
-Retrato e paisagem são suportados, mas a orientação paisagem oferece uma arena maior. Segure e arraste sobre o mar para navegar; o barco segue o dedo com a velocidade, rotação e colisões normais e para quando o toque termina. O deck de canhões abaixo da arena aceita pressionamentos simultâneos sem cobrir a batalha. Se a URL de rede estiver inacessível, verifique o firewall do computador e se a rede Wi-Fi permite a comunicação entre dispositivos.
+Retrato e paisagem são suportados, mas a orientação paisagem oferece uma arena maior. Use o joystick fixo no deck abaixo da arena: empurre para cima para avançar e para os lados para virar. Os canhões aceitam outro toque simultâneo, e nenhum dedo precisa cobrir a batalha. Se a URL de rede estiver inacessível, verifique o firewall do computador e se a rede Wi-Fi permite a comunicação entre dispositivos.
 
 Para ter suporte confiável a Service Worker em um celular físico, use a versão publicada com HTTPS. Um endereço HTTP simples da rede local pode não oferecer suporte ao worker simulado; a interface informa erros de configuração da API, e a jogabilidade continua disponível. Localhost e HTTPS são os ambientes de referência para as APIs.
 
@@ -68,14 +68,14 @@ Para ter suporte confiável a Service Worker em um celular físico, use a versã
 
 | Ação | Teclado | Ponteiro/toque |
 | --- | --- | --- |
-| Navegar | Mover o mouse para guiar; segurar W ou ↑ para avançar; A/D ou ←/→ para virar | Segurar e mover sobre a arena |
+| Navegar | Mover o mouse para guiar; segurar W ou ↑ para avançar; A/D ou ←/→ para virar | Joystick no deck abaixo da arena |
 | Ataque frontal | Espaço | Atirar à frente (botão Frente) |
 | Ataque lateral esquerdo | Q | Atirar à esquerda (botão de ataque esquerdo) |
 | Ataque lateral direito | E | Atirar à direita (botão de ataque direito) |
 | Ataque especial | R | Especial |
 | Pausar | Escape | Pausar |
 
-No computador, o cursor sobre a arena funciona como leme e não exige clique: ele orienta o navio com uma resposta 20% mais suave que a rotação direta do teclado, enquanto W ou a seta para cima controla o avanço. A/D e as setas laterais continuam disponíveis e têm prioridade enquanto estão pressionadas. No celular, manter um toque sobre a arena orienta e movimenta o navio; soltar interrompe o avanço. Nenhum dos dois modos arrasta ou teleporta o navio: o motor preserva rotação, velocidade e colisões. O navio não dá ré. Segure um ataque para repeti-lo no intervalo configurado. Movimento, rotação e todos os ataques podem ser combinados. Cada arma tem um tempo de recarga independente.
+No computador, o cursor sobre a arena funciona como leme e não exige clique: ele orienta o navio com uma resposta 20% mais suave que a rotação direta do teclado, enquanto W ou a seta para cima controla o avanço. A/D e as setas laterais continuam disponíveis e têm prioridade enquanto estão pressionadas. No celular, o joystick usa as mesmas ações tipadas do teclado: cima avança, os lados viram e diagonais combinam ambos. Soltar interrompe todas as ações do joystick. Nenhum modo arrasta ou teleporta o navio: o motor preserva rotação, velocidade e colisões. O navio não dá ré. Segure um ataque para repeti-lo no intervalo configurado. Movimento, rotação e todos os ataques podem ser combinados. Cada arma tem um tempo de recarga independente.
 
 O canhão frontal lança um projétil. Cada ataque lateral lança três projéteis paralelos de posições separadas ao longo do navio. Esquerda e direita são relativas à direção do navio, não à tela. Os projéteis desaparecem no primeiro impacto válido contra um alvo, uma ilha ou o limite da arena, ou quando seu tempo de vida termina. Os disparos do jogador só causam dano aos inimigos; os disparos inimigos só causam dano ao jogador.
 
@@ -99,7 +99,7 @@ O som é ativado após a primeira seleção de **Jogar**, conforme a política d
 12. Atire em direção à ilha; os disparos devem parar com um efeito visível de impacto, em vez de atravessá-la.
 13. Pause com disparos em movimento; as posições, os efeitos e os tempos de recarga devem parar. Continue sem pressionar o ataque novamente; uma entrada antiga mantida pressionada não deve voltar a disparar.
 14. No computador, mova o cursor sem pressionar W e confirme que o navio apenas gira; segure W e confirme que ele avança na direção apontada.
-15. No celular em retrato e paisagem, arraste sobre a arena com um dedo e pressione um canhão no deck inferior com outro. Confirme que os botões não cobrem a arena. Inicie uma nova sessão e verifique que nenhum projétil da sessão anterior permanece.
+15. No celular em retrato e paisagem, mova o joystick com um dedo e pressione um canhão com outro. Confirme que tocar sobre a arena não movimenta o navio e que os controles não cobrem a batalha. Inicie uma nova sessão e verifique que nenhum projétil da sessão anterior permanece.
 16. Espere os Perseguidores de velas vermelhas e os Atiradores de velas com caveira. Os Perseguidores perseguem e explodem ao contato; os Atiradores se aproximam e disparam quando estão ao alcance.
 17. Destrua um navio com seus canhões. Ele deve explodir, deixar de participar da partida e conceder exatamente um ponto.
 18. Deixe um Perseguidor colidir com você. A vida deve diminuir, o Perseguidor deve desaparecer e a pontuação não deve aumentar.
@@ -386,7 +386,7 @@ Commits de merge preservam a mensagem automática `Merge ...`. O histórico publ
 - **Página em branco:** verifique erros de build no terminal e erros no console de desenvolvedor do navegador. Inclua o erro exato nos comentários.
 - **Falha ao carregar recursos:** selecione Tentar novamente. Confirme que `public/assets/` existe e use a URL do servidor em vez de abrir um arquivo HTML diretamente.
 - **O jogo pausa durante a inspeção das ferramentas de desenvolvedor:** a pausa automática ao perder o foco é intencional. Selecione Continuar depois de devolver o foco ao jogo.
-- **Os controles de toque parecem pequenos:** ambas as orientações são suportadas, mas girar o celular para paisagem oferece uma arena e um deck de canhões maiores.
+- **Os controles de toque parecem pequenos:** ambas as orientações são suportadas, mas girar o celular para paisagem oferece uma arena, um joystick e um deck de canhões maiores.
 - **As alterações não aparecem na pré-visualização:** execute `npm run build` novamente.
 - **O Ranking fica vazio após alterar as opções:** as pontuações são comparadas somente com configurações completas correspondentes. Termine uma partida com as novas configurações ou restaure as configurações padrão para ver os dados padrão.
 - **Falha ao configurar a API simulada:** abra Cenários de rede e use Tentar configurar API. Confirme que `mockServiceWorker.js` está sendo servido e use HTTPS ou localhost. Ainda é possível jogar.
