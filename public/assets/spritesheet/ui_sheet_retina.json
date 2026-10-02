@@ -1,0 +1,1436 @@
+{
+  "frames": {
+    "panel_menu": {
+      "frame": {
+        "x": 4,
+        "y": 4,
+        "w": 768,
+        "h": 960
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 768,
+        "h": 960
+      },
+      "sourceSize": {
+        "w": 768,
+        "h": 960
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "borders": {
+        "left": 32.0,
+        "top": 40.0,
+        "right": 32.0,
+        "bottom": 40.0
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/retina/ui/menu/panel_menu.png",
+        "alpha_bounds": {
+          "x": 6.0,
+          "y": 4.0,
+          "w": 372.0,
+          "h": 472.0
+        },
+        "layout": {
+          "content_rect": {
+            "x": 26.0,
+            "y": 30.0,
+            "w": 332.0,
+            "h": 420.0
+          }
+        }
+      }
+    },
+    "title_pirate_battle": {
+      "frame": {
+        "x": 780,
+        "y": 4,
+        "w": 768,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 768,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 768,
+        "h": 256
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/retina/ui/menu/title_pirate_battle.png",
+        "alpha_bounds": {
+          "x": 6.0,
+          "y": 11.5,
+          "w": 372.0,
+          "h": 105.0
+        }
+      }
+    },
+    "button_primary_disabled": {
+      "frame": {
+        "x": 4,
+        "y": 972,
+        "w": 512,
+        "h": 176
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 176
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 176
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/retina/ui/menu/button_primary_disabled.png",
+        "alpha_bounds": {
+          "x": 8.0,
+          "y": 4.0,
+          "w": 240.0,
+          "h": 80.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_primary_hover": {
+      "frame": {
+        "x": 524,
+        "y": 972,
+        "w": 512,
+        "h": 176
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 176
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 176
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/retina/ui/menu/button_primary_hover.png",
+        "alpha_bounds": {
+          "x": 8.0,
+          "y": 4.0,
+          "w": 240.0,
+          "h": 80.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_primary_normal": {
+      "frame": {
+        "x": 1044,
+        "y": 972,
+        "w": 512,
+        "h": 176
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 176
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 176
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/retina/ui/menu/button_primary_normal.png",
+        "alpha_bounds": {
+          "x": 8.0,
+          "y": 4.0,
+          "w": 240.0,
+          "h": 80.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_primary_pressed": {
+      "frame": {
+        "x": 4,
+        "y": 1156,
+        "w": 512,
+        "h": 176
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 176
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 176
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/retina/ui/menu/button_primary_pressed.png",
+        "alpha_bounds": {
+          "x": 8.0,
+          "y": 4.0,
+          "w": 240.0,
+          "h": 80.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_secondary_normal": {
+      "frame": {
+        "x": 524,
+        "y": 1156,
+        "w": 512,
+        "h": 176
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 176
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 176
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/retina/ui/menu/button_secondary_normal.png",
+        "alpha_bounds": {
+          "x": 8.0,
+          "y": 4.0,
+          "w": 240.0,
+          "h": 80.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_secondary_pressed": {
+      "frame": {
+        "x": 1044,
+        "y": 1156,
+        "w": 512,
+        "h": 176
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 176
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 176
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/retina/ui/menu/button_secondary_pressed.png",
+        "alpha_bounds": {
+          "x": 8.0,
+          "y": 4.0,
+          "w": 240.0,
+          "h": 80.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_round_hover": {
+      "frame": {
+        "x": 1564,
+        "y": 1156,
+        "w": 128,
+        "h": 128
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/button_round_hover.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 56.0,
+          "h": 56.0
+        },
+        "layout": {
+          "group": "round_button",
+          "outer_rect": {
+            "x": 4.0,
+            "y": 4.0,
+            "w": 56.0,
+            "h": 56.0
+          },
+          "icon_center": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "icon_render_size": {
+            "w": 32.0,
+            "h": 32.0
+          }
+        }
+      }
+    },
+    "button_round_normal": {
+      "frame": {
+        "x": 1700,
+        "y": 1156,
+        "w": 128,
+        "h": 128
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/button_round_normal.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 56.0,
+          "h": 56.0
+        },
+        "layout": {
+          "group": "round_button",
+          "outer_rect": {
+            "x": 4.0,
+            "y": 4.0,
+            "w": 56.0,
+            "h": 56.0
+          },
+          "icon_center": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "icon_render_size": {
+            "w": 32.0,
+            "h": 32.0
+          }
+        }
+      }
+    },
+    "button_round_pressed": {
+      "frame": {
+        "x": 1836,
+        "y": 1156,
+        "w": 128,
+        "h": 128
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 128
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 128
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/button_round_pressed.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 56.0,
+          "h": 56.0
+        },
+        "layout": {
+          "group": "round_button",
+          "outer_rect": {
+            "x": 4.0,
+            "y": 4.0,
+            "w": 56.0,
+            "h": 56.0
+          },
+          "icon_center": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "icon_render_size": {
+            "w": 32.0,
+            "h": 32.0
+          }
+        }
+      }
+    },
+    "counter_panel": {
+      "frame": {
+        "x": 4,
+        "y": 1340,
+        "w": 320,
+        "h": 112
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 112
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 112
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/counter_panel.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 6.0,
+          "w": 152.0,
+          "h": 43.5
+        }
+      }
+    },
+    "health_fill_amber": {
+      "frame": {
+        "x": 332,
+        "y": 1340,
+        "w": 512,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 96
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/health_fill_amber.png",
+        "alpha_bounds": {
+          "x": 30.0,
+          "y": 15.0,
+          "w": 196.0,
+          "h": 20.0
+        },
+        "layout": {
+          "group": "player_health",
+          "frame": "health_frame",
+          "fill_rect": {
+            "x": 30.0,
+            "y": 15.0,
+            "w": 196.0,
+            "h": 20.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "health_fill_green": {
+      "frame": {
+        "x": 852,
+        "y": 1340,
+        "w": 512,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 96
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/health_fill_green.png",
+        "alpha_bounds": {
+          "x": 30.0,
+          "y": 15.0,
+          "w": 196.0,
+          "h": 20.0
+        },
+        "layout": {
+          "group": "player_health",
+          "frame": "health_frame",
+          "fill_rect": {
+            "x": 30.0,
+            "y": 15.0,
+            "w": 196.0,
+            "h": 20.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "health_fill_red": {
+      "frame": {
+        "x": 1372,
+        "y": 1340,
+        "w": 512,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 96
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/health_fill_red.png",
+        "alpha_bounds": {
+          "x": 30.0,
+          "y": 15.0,
+          "w": 196.0,
+          "h": 20.0
+        },
+        "layout": {
+          "group": "player_health",
+          "frame": "health_frame",
+          "fill_rect": {
+            "x": 30.0,
+            "y": 15.0,
+            "w": 196.0,
+            "h": 20.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "health_frame": {
+      "frame": {
+        "x": 4,
+        "y": 1460,
+        "w": 512,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 96
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/health_frame.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 248.0,
+          "h": 40.0
+        },
+        "layout": {
+          "group": "player_health",
+          "frame": "health_frame",
+          "fill_rect": {
+            "x": 30.0,
+            "y": 15.0,
+            "w": 196.0,
+            "h": 20.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "icon_close": {
+      "frame": {
+        "x": 524,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_close.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 40.0,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_fire_front": {
+      "frame": {
+        "x": 628,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_fire_front.png",
+        "alpha_bounds": {
+          "x": 14.0,
+          "y": 4.0,
+          "w": 20.0,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_fire_left": {
+      "frame": {
+        "x": 732,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_fire_left.png",
+        "alpha_bounds": {
+          "x": 4.5,
+          "y": 4.0,
+          "w": 39.0,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_fire_right": {
+      "frame": {
+        "x": 836,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_fire_right.png",
+        "alpha_bounds": {
+          "x": 4.5,
+          "y": 4.0,
+          "w": 38.5,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_forward": {
+      "frame": {
+        "x": 940,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_forward.png",
+        "alpha_bounds": {
+          "x": 8.0,
+          "y": 4.0,
+          "w": 32.0,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_heart": {
+      "frame": {
+        "x": 1044,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/icon_heart.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 8.0,
+          "w": 40.0,
+          "h": 32.0
+        }
+      }
+    },
+    "icon_home": {
+      "frame": {
+        "x": 1148,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_home.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 5.0,
+          "w": 40.0,
+          "h": 37.5
+        }
+      }
+    },
+    "icon_minus": {
+      "frame": {
+        "x": 1252,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_minus.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 17.5,
+          "w": 40.0,
+          "h": 13.0
+        }
+      }
+    },
+    "icon_pause": {
+      "frame": {
+        "x": 1356,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_pause.png",
+        "alpha_bounds": {
+          "x": 6.5,
+          "y": 4.0,
+          "w": 35.0,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_play": {
+      "frame": {
+        "x": 1460,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_play.png",
+        "alpha_bounds": {
+          "x": 7.0,
+          "y": 4.0,
+          "w": 33.5,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_plus": {
+      "frame": {
+        "x": 1564,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_plus.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 40.0,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_restart": {
+      "frame": {
+        "x": 1668,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_restart.png",
+        "alpha_bounds": {
+          "x": 4.5,
+          "y": 4.0,
+          "w": 38.5,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_score": {
+      "frame": {
+        "x": 1772,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/icon_score.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.5,
+          "w": 40.0,
+          "h": 38.5
+        }
+      }
+    },
+    "icon_settings": {
+      "frame": {
+        "x": 1876,
+        "y": 1460,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_settings.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 39.5,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_time": {
+      "frame": {
+        "x": 4,
+        "y": 1564,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/icon_time.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 40.0,
+          "h": 39.5
+        }
+      }
+    },
+    "icon_turn_left": {
+      "frame": {
+        "x": 108,
+        "y": 1564,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_turn_left.png",
+        "alpha_bounds": {
+          "x": 5.5,
+          "y": 4.0,
+          "w": 36.5,
+          "h": 40.0
+        }
+      }
+    },
+    "icon_turn_right": {
+      "frame": {
+        "x": 212,
+        "y": 1564,
+        "w": 96,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 96
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/retina/ui/controls/icon_turn_right.png",
+        "alpha_bounds": {
+          "x": 5.5,
+          "y": 4.0,
+          "w": 37.0,
+          "h": 40.0
+        }
+      }
+    },
+    "enemy_health_fill_green": {
+      "frame": {
+        "x": 316,
+        "y": 1564,
+        "w": 320,
+        "h": 80
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 80
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 80
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/enemy_health_fill_green.png",
+        "alpha_bounds": {
+          "x": 24.0,
+          "y": 12.0,
+          "w": 112.0,
+          "h": 15.0
+        },
+        "layout": {
+          "group": "enemy_health",
+          "frame": "enemy_health_frame",
+          "fill_rect": {
+            "x": 24.0,
+            "y": 12.0,
+            "w": 112.0,
+            "h": 15.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "enemy_health_fill_red": {
+      "frame": {
+        "x": 644,
+        "y": 1564,
+        "w": 320,
+        "h": 80
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 80
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 80
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/enemy_health_fill_red.png",
+        "alpha_bounds": {
+          "x": 24.0,
+          "y": 12.0,
+          "w": 112.0,
+          "h": 15.0
+        },
+        "layout": {
+          "group": "enemy_health",
+          "frame": "enemy_health_frame",
+          "fill_rect": {
+            "x": 24.0,
+            "y": 12.0,
+            "w": 112.0,
+            "h": 15.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "enemy_health_frame": {
+      "frame": {
+        "x": 972,
+        "y": 1564,
+        "w": 320,
+        "h": 80
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 320,
+        "h": 80
+      },
+      "sourceSize": {
+        "w": 320,
+        "h": 80
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/retina/ui/hud/enemy_health_frame.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 4.0,
+          "w": 152.0,
+          "h": 31.0
+        },
+        "layout": {
+          "group": "enemy_health",
+          "frame": "enemy_health_frame",
+          "fill_rect": {
+            "x": 24.0,
+            "y": 12.0,
+            "w": 112.0,
+            "h": 15.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    }
+  },
+  "meta": {
+    "app": "Pirate Battle UI asset pack",
+    "version": "1.0",
+    "image": "ui_sheet_retina.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 2048,
+      "h": 2048
+    },
+    "scale": "2",
+    "ui": {
+      "version": 1,
+      "coordinate_space": "untrimmed_sprite_top_left",
+      "units": "logical_pixels",
+      "image_paths_relative_to": "atlas_json"
+    }
+  }
+}

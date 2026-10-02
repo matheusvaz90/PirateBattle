@@ -1,0 +1,1436 @@
+{
+  "frames": {
+    "panel_menu": {
+      "frame": {
+        "x": 4,
+        "y": 4,
+        "w": 384,
+        "h": 480
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 480
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 480
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "borders": {
+        "left": 32.0,
+        "top": 40.0,
+        "right": 32.0,
+        "bottom": 40.0
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/default/ui/menu/panel_menu.png",
+        "alpha_bounds": {
+          "x": 3.0,
+          "y": 1.0,
+          "w": 378.0,
+          "h": 478.0
+        },
+        "layout": {
+          "content_rect": {
+            "x": 26.0,
+            "y": 30.0,
+            "w": 332.0,
+            "h": 420.0
+          }
+        }
+      }
+    },
+    "title_pirate_battle": {
+      "frame": {
+        "x": 396,
+        "y": 4,
+        "w": 384,
+        "h": 128
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 384,
+        "h": 128
+      },
+      "sourceSize": {
+        "w": 384,
+        "h": 128
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/default/ui/menu/title_pirate_battle.png",
+        "alpha_bounds": {
+          "x": 3.0,
+          "y": 9.0,
+          "w": 378.0,
+          "h": 110.0
+        }
+      }
+    },
+    "button_primary_disabled": {
+      "frame": {
+        "x": 4,
+        "y": 492,
+        "w": 256,
+        "h": 88
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 88
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/default/ui/menu/button_primary_disabled.png",
+        "alpha_bounds": {
+          "x": 5.0,
+          "y": 1.0,
+          "w": 246.0,
+          "h": 86.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_primary_hover": {
+      "frame": {
+        "x": 268,
+        "y": 492,
+        "w": 256,
+        "h": 88
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 88
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/default/ui/menu/button_primary_hover.png",
+        "alpha_bounds": {
+          "x": 5.0,
+          "y": 2.0,
+          "w": 246.0,
+          "h": 84.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_primary_normal": {
+      "frame": {
+        "x": 532,
+        "y": 492,
+        "w": 256,
+        "h": 88
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 88
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/default/ui/menu/button_primary_normal.png",
+        "alpha_bounds": {
+          "x": 5.0,
+          "y": 1.0,
+          "w": 246.0,
+          "h": 86.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_primary_pressed": {
+      "frame": {
+        "x": 4,
+        "y": 588,
+        "w": 256,
+        "h": 88
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 88
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/default/ui/menu/button_primary_pressed.png",
+        "alpha_bounds": {
+          "x": 5.0,
+          "y": 1.0,
+          "w": 246.0,
+          "h": 86.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_secondary_normal": {
+      "frame": {
+        "x": 268,
+        "y": 588,
+        "w": 256,
+        "h": 88
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 88
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/default/ui/menu/button_secondary_normal.png",
+        "alpha_bounds": {
+          "x": 6.0,
+          "y": 1.0,
+          "w": 245.0,
+          "h": 85.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_secondary_pressed": {
+      "frame": {
+        "x": 532,
+        "y": 588,
+        "w": 256,
+        "h": 88
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 88
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 88
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "menu",
+        "image": "../png/default/ui/menu/button_secondary_pressed.png",
+        "alpha_bounds": {
+          "x": 5.0,
+          "y": 1.0,
+          "w": 246.0,
+          "h": 86.0
+        },
+        "layout": {
+          "group": "menu_button",
+          "outer_rect": {
+            "x": 8.0,
+            "y": 4.0,
+            "w": 240.0,
+            "h": 80.0
+          },
+          "label_rect": {
+            "x": 32.5,
+            "y": 19.5,
+            "w": 191.0,
+            "h": 46.5
+          }
+        }
+      }
+    },
+    "button_round_hover": {
+      "frame": {
+        "x": 796,
+        "y": 588,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/button_round_hover.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 62.0,
+          "h": 62.0
+        },
+        "layout": {
+          "group": "round_button",
+          "outer_rect": {
+            "x": 4.0,
+            "y": 4.0,
+            "w": 56.0,
+            "h": 56.0
+          },
+          "icon_center": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "icon_render_size": {
+            "w": 32.0,
+            "h": 32.0
+          }
+        }
+      }
+    },
+    "button_round_normal": {
+      "frame": {
+        "x": 868,
+        "y": 588,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/button_round_normal.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 62.0,
+          "h": 62.0
+        },
+        "layout": {
+          "group": "round_button",
+          "outer_rect": {
+            "x": 4.0,
+            "y": 4.0,
+            "w": 56.0,
+            "h": 56.0
+          },
+          "icon_center": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "icon_render_size": {
+            "w": 32.0,
+            "h": 32.0
+          }
+        }
+      }
+    },
+    "button_round_pressed": {
+      "frame": {
+        "x": 940,
+        "y": 588,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/button_round_pressed.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 62.0,
+          "h": 62.0
+        },
+        "layout": {
+          "group": "round_button",
+          "outer_rect": {
+            "x": 4.0,
+            "y": 4.0,
+            "w": 56.0,
+            "h": 56.0
+          },
+          "icon_center": {
+            "x": 32.0,
+            "y": 32.0
+          },
+          "icon_render_size": {
+            "w": 32.0,
+            "h": 32.0
+          }
+        }
+      }
+    },
+    "counter_panel": {
+      "frame": {
+        "x": 4,
+        "y": 684,
+        "w": 160,
+        "h": 56
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 56
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 56
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/counter_panel.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 3.0,
+          "w": 158.0,
+          "h": 49.0
+        }
+      }
+    },
+    "health_fill_amber": {
+      "frame": {
+        "x": 172,
+        "y": 684,
+        "w": 256,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 48
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/health_fill_amber.png",
+        "alpha_bounds": {
+          "x": 27.0,
+          "y": 12.0,
+          "w": 202.0,
+          "h": 26.0
+        },
+        "layout": {
+          "group": "player_health",
+          "frame": "health_frame",
+          "fill_rect": {
+            "x": 30.0,
+            "y": 15.0,
+            "w": 196.0,
+            "h": 20.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "health_fill_green": {
+      "frame": {
+        "x": 436,
+        "y": 684,
+        "w": 256,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 48
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/health_fill_green.png",
+        "alpha_bounds": {
+          "x": 27.0,
+          "y": 12.0,
+          "w": 202.0,
+          "h": 26.0
+        },
+        "layout": {
+          "group": "player_health",
+          "frame": "health_frame",
+          "fill_rect": {
+            "x": 30.0,
+            "y": 15.0,
+            "w": 196.0,
+            "h": 20.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "health_fill_red": {
+      "frame": {
+        "x": 700,
+        "y": 684,
+        "w": 256,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 48
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/health_fill_red.png",
+        "alpha_bounds": {
+          "x": 27.0,
+          "y": 12.0,
+          "w": 202.0,
+          "h": 26.0
+        },
+        "layout": {
+          "group": "player_health",
+          "frame": "health_frame",
+          "fill_rect": {
+            "x": 30.0,
+            "y": 15.0,
+            "w": 196.0,
+            "h": 20.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "health_frame": {
+      "frame": {
+        "x": 4,
+        "y": 748,
+        "w": 256,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 48
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/health_frame.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 254.0,
+          "h": 46.0
+        },
+        "layout": {
+          "group": "player_health",
+          "frame": "health_frame",
+          "fill_rect": {
+            "x": 30.0,
+            "y": 15.0,
+            "w": 196.0,
+            "h": 20.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "icon_close": {
+      "frame": {
+        "x": 268,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_close.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 46.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_fire_front": {
+      "frame": {
+        "x": 324,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_fire_front.png",
+        "alpha_bounds": {
+          "x": 11.0,
+          "y": 1.0,
+          "w": 26.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_fire_left": {
+      "frame": {
+        "x": 380,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_fire_left.png",
+        "alpha_bounds": {
+          "x": 2.0,
+          "y": 1.0,
+          "w": 44.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_fire_right": {
+      "frame": {
+        "x": 436,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_fire_right.png",
+        "alpha_bounds": {
+          "x": 2.0,
+          "y": 1.0,
+          "w": 44.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_forward": {
+      "frame": {
+        "x": 492,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_forward.png",
+        "alpha_bounds": {
+          "x": 5.0,
+          "y": 1.0,
+          "w": 38.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_heart": {
+      "frame": {
+        "x": 548,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/icon_heart.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 5.0,
+          "w": 46.0,
+          "h": 38.0
+        }
+      }
+    },
+    "icon_home": {
+      "frame": {
+        "x": 604,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_home.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 2.0,
+          "w": 46.0,
+          "h": 43.0
+        }
+      }
+    },
+    "icon_minus": {
+      "frame": {
+        "x": 660,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_minus.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 15.0,
+          "w": 46.0,
+          "h": 18.0
+        }
+      }
+    },
+    "icon_pause": {
+      "frame": {
+        "x": 716,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_pause.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 1.0,
+          "w": 40.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_play": {
+      "frame": {
+        "x": 772,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_play.png",
+        "alpha_bounds": {
+          "x": 4.0,
+          "y": 1.0,
+          "w": 39.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_plus": {
+      "frame": {
+        "x": 828,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_plus.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 46.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_restart": {
+      "frame": {
+        "x": 884,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_restart.png",
+        "alpha_bounds": {
+          "x": 2.0,
+          "y": 1.0,
+          "w": 44.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_score": {
+      "frame": {
+        "x": 940,
+        "y": 748,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/icon_score.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 2.0,
+          "w": 46.0,
+          "h": 44.0
+        }
+      }
+    },
+    "icon_settings": {
+      "frame": {
+        "x": 4,
+        "y": 804,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_settings.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 45.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_time": {
+      "frame": {
+        "x": 60,
+        "y": 804,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/icon_time.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 46.0,
+          "h": 45.0
+        }
+      }
+    },
+    "icon_turn_left": {
+      "frame": {
+        "x": 116,
+        "y": 804,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_turn_left.png",
+        "alpha_bounds": {
+          "x": 3.0,
+          "y": 1.0,
+          "w": 42.0,
+          "h": 46.0
+        }
+      }
+    },
+    "icon_turn_right": {
+      "frame": {
+        "x": 172,
+        "y": 804,
+        "w": 48,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 48
+      },
+      "ui": {
+        "family": "controls",
+        "image": "../png/default/ui/controls/icon_turn_right.png",
+        "alpha_bounds": {
+          "x": 3.0,
+          "y": 1.0,
+          "w": 42.0,
+          "h": 46.0
+        }
+      }
+    },
+    "enemy_health_fill_green": {
+      "frame": {
+        "x": 228,
+        "y": 804,
+        "w": 160,
+        "h": 40
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 40
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 40
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/enemy_health_fill_green.png",
+        "alpha_bounds": {
+          "x": 21.0,
+          "y": 9.0,
+          "w": 118.0,
+          "h": 21.0
+        },
+        "layout": {
+          "group": "enemy_health",
+          "frame": "enemy_health_frame",
+          "fill_rect": {
+            "x": 24.0,
+            "y": 12.0,
+            "w": 112.0,
+            "h": 15.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "enemy_health_fill_red": {
+      "frame": {
+        "x": 396,
+        "y": 804,
+        "w": 160,
+        "h": 40
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 40
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 40
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/enemy_health_fill_red.png",
+        "alpha_bounds": {
+          "x": 21.0,
+          "y": 9.0,
+          "w": 118.0,
+          "h": 21.0
+        },
+        "layout": {
+          "group": "enemy_health",
+          "frame": "enemy_health_frame",
+          "fill_rect": {
+            "x": 24.0,
+            "y": 12.0,
+            "w": 112.0,
+            "h": 15.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    },
+    "enemy_health_frame": {
+      "frame": {
+        "x": 564,
+        "y": 804,
+        "w": 160,
+        "h": 40
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 40
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 40
+      },
+      "anchor": {
+        "x": 0,
+        "y": 0
+      },
+      "ui": {
+        "family": "hud",
+        "image": "../png/default/ui/hud/enemy_health_frame.png",
+        "alpha_bounds": {
+          "x": 1.0,
+          "y": 1.0,
+          "w": 158.0,
+          "h": 37.0
+        },
+        "layout": {
+          "group": "enemy_health",
+          "frame": "enemy_health_frame",
+          "fill_rect": {
+            "x": 24.0,
+            "y": 12.0,
+            "w": 112.0,
+            "h": 15.0
+          },
+          "clip_axis": "x",
+          "clip_origin": "left",
+          "draw_order": [
+            "frame",
+            "fill"
+          ]
+        }
+      }
+    }
+  },
+  "meta": {
+    "app": "Pirate Battle UI asset pack",
+    "version": "1.0",
+    "image": "ui_sheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1024,
+      "h": 1024
+    },
+    "scale": "1",
+    "ui": {
+      "version": 1,
+      "coordinate_space": "untrimmed_sprite_top_left",
+      "units": "logical_pixels",
+      "image_paths_relative_to": "atlas_json"
+    }
+  }
+}

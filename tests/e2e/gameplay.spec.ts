@@ -1,0 +1,325 @@
+import { expect, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
+
+async function startControlledGame(page: Page, scenario = 'navigation') {
+  await page.goto(`/?scenario=${scenario}`);
+  await page.getByRole('button', { name: 'Jogar', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  await page.evaluate(() => {
+    if (!window.__PIRATE_TEST__) throw new Error('Use npm run build:test for controlled gameplay tests.');
+    window.__PIRATE_TEST__.controlClock();
+  });
+  await page.getByTestId('arena').focus();
+}
+
+async function snapshot(page: Page) {
+  return page.evaluate(() => {
+    if (!window.__PIRATE_TEST__) throw new Error('The test observer is unavailable.');
+    return window.__PIRATE_TEST__.snapshot();
+  });
+}
+
+async function advance(page: Page, seconds: number) {
+  await page.evaluate((duration) => {
+    if (!window.__PIRATE_TEST__) throw new Error('The controlled clock is unavailable.');
+    window.__PIRATE_TEST__.advance(duration);
+  }, seconds);
+}
+
+test('real keyboard movement reaches the island without penetrating it', async ({ page }) => {
+  await startControlledGame(page);
+  const before = await snapshot(page);
+  await page.keyboard.down('w');
+  await advance(page, 2);
+  await page.keyboard.up('w');
+  const after = await snapshot(page);
+  expect(after.player.x).toBeGreaterThan(before.player.x + 200);
+  expect(Math.hypot(after.player.x - 640, after.player.y - 360)).toBeGreaterThanOrEqual(96 + after.player.radius);
+});
+
+test('rotation and forward input work together', async ({ page }) => {
+  await startControlledGame(page);
+  const before = await snapshot(page);
+  await page.keyboard.down('w');
+  await page.keyboard.down('d');
+  await advance(page, 0.5);
+  await page.keyboard.up('w');
+  await page.keyboard.up('d');
+  const after = await snapshot(page);
+  expect(after.player.heading).toBeGreaterThan(before.player.heading);
+  expect(after.player.y).toBeGreaterThan(before.player.y);
+  expect(after.player.x).toBeGreaterThan(before.player.x);
+});
+
+test('pause freezes the clock and explicit resume does not replay held input', async ({ page }) => {
+  await startControlledGame(page);
+  await page.keyboard.down('w');
+  await advance(page, 0.5);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  const before = await snapshot(page);
+  await advance(page, 10);
+  expect(await snapshot(page)).toEqual(before);
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await advance(page, 0.5);
+  const after = await snapshot(page);
+  expect(after.player).toEqual(before.player);
+  await page.keyboard.up('w');
+});
+
+test('focus loss pauses and requires an explicit resume', async ({ page }) => {
+  await startControlledGame(page);
+  await page.evaluate(() => window.dispatchEvent(new Event('blur')));
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await advance(page, 10);
+  expect((await snapshot(page)).status).toBe('paused');
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  expect((await snapshot(page)).status).toBe('running');
+});
+
+test('timeout restores the result after refresh and restart creates a clean ship', async ({ page }) => {
+  await startControlledGame(page);
+  await advance(page, 120);
+  await expect(page.getByRole('heading', { name: 'De volta ao porto.' })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'De volta ao porto.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Jogar novamente', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  const restarted = await snapshot(page);
+  expect(restarted.player.x).toBe(220);
+  expect(restarted.player.y).toBe(360);
+  expect(restarted.player.heading).toBe(0);
+  expect(restarted.activeDuration).toBeLessThan(1);
+  expect(restarted.projectiles).toEqual([]);
+  expect(restarted.effects).toEqual([]);
+  expect(restarted.cooldowns).toEqual({ front: 0, left: 0, right: 0 });
+});
+
+test('pointer controls move the ship and release stops movement', async ({ page }) => {
+  await startControlledGame(page);
+  const button = page.getByRole('button', { name: 'Avançar', exact: true });
+  const bounds = await button.boundingBox();
+  if (!bounds) throw new Error('The touch control is not visible.');
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  await page.mouse.down();
+  const before = await snapshot(page);
+  await advance(page, 0.5);
+  await page.mouse.up();
+  const moved = await snapshot(page);
+  expect(moved.player.x).toBeGreaterThan(before.player.x);
+  await advance(page, 0.5);
+  expect((await snapshot(page)).player).toEqual(moved.player);
+});
+
+test('front fire uses real input and repeats only after its cooldown', async ({ page }) => {
+  await startControlledGame(page);
+  await page.keyboard.down('Space');
+  await advance(page, 1 / 60);
+  expect((await snapshot(page)).projectiles).toHaveLength(1);
+  await advance(page, 0.4);
+  expect((await snapshot(page)).projectiles).toHaveLength(1);
+  await advance(page, 0.05);
+  expect((await snapshot(page)).projectiles).toHaveLength(2);
+  await page.keyboard.up('Space');
+});
+
+test('left and right keyboard commands create independent parallel broadsides', async ({ page }) => {
+  await startControlledGame(page);
+  await page.keyboard.down('q');
+  await page.keyboard.down('e');
+  await advance(page, 1 / 60);
+  await page.keyboard.up('q');
+  await page.keyboard.up('e');
+  const world = await snapshot(page);
+  for (const weapon of ['left', 'right'] as const) {
+    const salvo = world.projectiles.filter((projectile) => projectile.weapon === weapon);
+    expect(salvo).toHaveLength(3);
+    expect(new Set(salvo.map((projectile) => projectile.heading)).size).toBe(1);
+    expect(new Set(salvo.map((projectile) => projectile.x)).size).toBe(3);
+  }
+});
+
+test('forward movement and turning continue while firing', async ({ page }) => {
+  await startControlledGame(page);
+  const before = await snapshot(page);
+  await page.keyboard.down('w');
+  await page.keyboard.down('d');
+  await page.keyboard.down('Space');
+  await advance(page, 0.5);
+  await page.keyboard.up('w');
+  await page.keyboard.up('d');
+  await page.keyboard.up('Space');
+  const after = await snapshot(page);
+  expect(after.player.x).toBeGreaterThan(before.player.x);
+  expect(after.player.heading).toBeGreaterThan(before.player.heading);
+  expect(after.projectiles.length).toBeGreaterThan(0);
+});
+
+test('a cannonball stops at the island and produces impact feedback', async ({ page }) => {
+  await startControlledGame(page);
+  await page.keyboard.down('Space');
+  await advance(page, 1 / 60);
+  await page.keyboard.up('Space');
+  await advance(page, 0.6);
+  const world = await snapshot(page);
+  expect(world.projectiles).toHaveLength(0);
+  expect(world.effects.some((effect) => effect.kind === 'impact')).toBe(true);
+});
+
+test('paused shots and weapon cooldowns remain frozen and do not replay old fire', async ({ page }) => {
+  await startControlledGame(page);
+  await page.keyboard.down('Space');
+  await advance(page, 1 / 60);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  const paused = await snapshot(page);
+  await advance(page, 10);
+  expect(await snapshot(page)).toEqual(paused);
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await advance(page, 1 / 60);
+  const resumed = await snapshot(page);
+  expect(resumed.projectiles).toHaveLength(1);
+  expect(resumed.projectiles[0]?.id).toBe(paused.projectiles[0]?.id);
+  expect(resumed.cooldowns.front).toBeLessThan(paused.cooldowns.front);
+  await page.keyboard.down('Space');
+  await advance(page, 0.5);
+  expect((await snapshot(page)).projectiles).toHaveLength(0);
+  await page.keyboard.up('Space');
+  await page.keyboard.down('Space');
+  await advance(page, 1 / 60);
+  expect((await snapshot(page)).projectiles).toHaveLength(1);
+  await page.keyboard.up('Space');
+});
+
+test('two touch pointers can move and fire together and release clears movement', async ({ page, context }) => {
+  await startControlledGame(page);
+  const forward = await page.getByRole('button', { name: 'Avançar', exact: true }).boundingBox();
+  const fire = await page.getByRole('button', { name: 'Atirar à frente', exact: true }).boundingBox();
+  if (!forward || !fire) throw new Error('The touch controls are not visible.');
+  const before = await snapshot(page);
+  const session = await context.newCDPSession(page);
+  try {
+    await session.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 2 });
+    await session.send('Input.dispatchTouchEvent', {
+      type: 'touchStart',
+      touchPoints: [
+        { id: 1, x: forward.x + forward.width / 2, y: forward.y + forward.height / 2 },
+        { id: 2, x: fire.x + fire.width / 2, y: fire.y + fire.height / 2 },
+      ],
+    });
+    await advance(page, 0.1);
+    const moved = await snapshot(page);
+    expect(moved.player.x).toBeGreaterThan(before.player.x);
+    expect(moved.projectiles.length).toBeGreaterThan(0);
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await advance(page, 0.1);
+    expect((await snapshot(page)).player).toEqual(moved.player);
+  } finally {
+    await session.detach();
+  }
+});
+
+test('real front attacks damage and destroy an enemy for exactly one point', async ({ page }) => {
+  await startControlledGame(page, 'front-target');
+  await page.keyboard.down('Space');
+  await advance(page, 0.35);
+  let world = await snapshot(page);
+  expect(world.enemies[0]?.health).toBe(50);
+  expect(world.score).toBe(0);
+  await advance(page, 0.85);
+  await page.keyboard.up('Space');
+  world = await snapshot(page);
+  expect(world.enemies).toHaveLength(0);
+  expect(world.score).toBe(1);
+  expect(world.effects.some((effect) => effect.kind === 'destruction')).toBe(true);
+  await expect(page.getByTestId('score')).toHaveText('1');
+  await advance(page, 1);
+  expect((await snapshot(page)).score).toBe(1);
+});
+
+test('Chaser approaches and self-destructs on contact without awarding points', async ({ page }) => {
+  await startControlledGame(page, 'chaser-contact');
+  const original = (await snapshot(page)).enemies[0];
+  expect(original?.kind).toBe('chaser');
+  await advance(page, 0.05);
+  const approaching = (await snapshot(page)).enemies[0];
+  expect(approaching?.x).toBeLessThan(original?.x ?? 0);
+  await advance(page, 0.2);
+  const world = await snapshot(page);
+  expect(world.enemies).toHaveLength(0);
+  expect(world.player.health).toBe(75);
+  expect(world.score).toBe(0);
+  await expect(page.getByTestId('ship-health')).toHaveText('75 / 100');
+});
+
+test('Shooter respects its cooldown and its shot damages the player', async ({ page }) => {
+  await startControlledGame(page, 'shooter-fire');
+  await advance(page, 1.5);
+  expect((await snapshot(page)).projectiles).toHaveLength(0);
+  await advance(page, 0.2);
+  expect((await snapshot(page)).projectiles.filter((projectile) => projectile.faction === 'enemy')).toHaveLength(1);
+  await advance(page, 0.6);
+  const world = await snapshot(page);
+  expect(world.player.health).toBe(88);
+  expect(world.enemies[0]?.health).toBe(75);
+  await expect(page.getByTestId('ship-health')).toHaveText('88 / 100');
+});
+
+test('default spawns follow the interval and produce both enemy types', async ({ page }) => {
+  await startControlledGame(page, 'standard');
+  await advance(page, 3.9);
+  expect((await snapshot(page)).spawnCount).toBe(0);
+  await advance(page, 0.1);
+  let world = await snapshot(page);
+  expect(world.spawnCount).toBe(1);
+  const chaser = world.enemies[0];
+  expect(chaser?.kind).toBe('chaser');
+  expect(Math.hypot((chaser?.x ?? 0) - world.player.x, (chaser?.y ?? 0) - world.player.y)).toBeGreaterThanOrEqual(320);
+  await page.keyboard.press('Escape');
+  const paused = await snapshot(page);
+  await advance(page, 20);
+  expect(await snapshot(page)).toEqual(paused);
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await advance(page, 4);
+  world = await snapshot(page);
+  expect(world.spawnCount).toBe(2);
+  expect(world.enemies.some((enemy) => enemy.kind === 'shooter')).toBe(true);
+});
+
+test('both enemy types move around the island without crossing it', async ({ page }) => {
+  await startControlledGame(page, 'enemy-navigation');
+  const passed = new Set<string>();
+  for (let interval = 0; interval < 60; interval += 1) {
+    await advance(page, 0.2);
+    const world = await snapshot(page);
+    for (const enemy of world.enemies) {
+      expect(Math.hypot(enemy.x - 640, enemy.y - 360)).toBeGreaterThanOrEqual(96 + enemy.radius);
+      if (enemy.x < 510) passed.add(enemy.kind);
+    }
+  }
+  expect(passed.has('chaser')).toBe(true);
+  expect(passed.has('shooter')).toBe(true);
+});
+
+test('death shows and persists the result and Play Again resets health and score', async ({ page }) => {
+  await startControlledGame(page, 'death-contact');
+  await advance(page, 0.5);
+  await expect(page.getByRole('heading', { name: 'Seu navio afundou.' })).toBeVisible();
+  await expect(page.getByText('Navio destruído', { exact: true })).toBeVisible();
+  const result = await page.evaluate(() => {
+    const raw = window.localStorage.getItem('pirate-battle.last-result.v1');
+    if (!raw) throw new Error('A completed result was not saved.');
+    return raw;
+  });
+  expect(result).toContain('"endReason":"death"');
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Seu navio afundou.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Jogar novamente', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Avançar', exact: true })).toBeEnabled();
+  const fresh = await snapshot(page);
+  expect(fresh.player.health).toBe(100);
+  expect(fresh.score).toBe(0);
+  expect(fresh.activeDuration).toBe(0);
+  expect(fresh.projectiles).toEqual([]);
+  expect(fresh.spawnCount).toBe(0);
+});
