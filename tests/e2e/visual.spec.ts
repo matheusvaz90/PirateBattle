@@ -6,8 +6,8 @@ async function openStableMenu(page: Page, scenario: string) {
   await page.goto(`/?scenario=${scenario}`);
   await expect(page.getByRole('table', { name: 'Ranking', exact: true })).toBeVisible();
   await expect(page.getByText('Atualizando em segundo plano…', { exact: true })).toHaveCount(0);
-  await page.locator('.hero-ship').evaluate(async (element) => {
-    if (!(element instanceof HTMLImageElement)) throw new Error('The menu ship image is unavailable.');
+  await page.locator('.game-menu-title img').evaluate(async (element) => {
+    if (!(element instanceof HTMLImageElement)) throw new Error('The menu title image is unavailable.');
     await element.decode();
   });
   await page.evaluate(async () => { await document.fonts.ready; });

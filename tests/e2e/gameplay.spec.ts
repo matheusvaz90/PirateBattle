@@ -199,20 +199,28 @@ test('paused shots and weapon cooldowns remain frozen and do not replay old fire
   await page.keyboard.up('Space');
 });
 
-test('two touch pointers can move and fire together and release clears movement', async ({ page, context }, testInfo) => {
+test('mobile joystick can move and fire while arena touches do not cover navigation', async ({ page, context }, testInfo) => {
   test.skip(!testInfo.project.name.startsWith('mobile-'), 'Touch controls are presented on coarse pointers.');
   await startControlledGame(page);
   const arena = await page.getByTestId('arena').boundingBox();
+  const joystick = await page.getByTestId('mobile-joystick').boundingBox();
   const fire = await page.getByRole('button', { name: 'Atirar à frente', exact: true }).boundingBox();
-  if (!arena || !fire) throw new Error('The touch controls are not visible.');
+  if (!arena || !joystick || !fire) throw new Error('The touch controls are not visible.');
   const before = await snapshot(page);
   const session = await context.newCDPSession(page);
   try {
     await session.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 2 });
     await session.send('Input.dispatchTouchEvent', {
       type: 'touchStart',
+      touchPoints: [{ id: 1, x: arena.x + arena.width * 0.75, y: arena.y + arena.height * 0.6 }],
+    });
+    await advance(page, 0.1);
+    expect((await snapshot(page)).player).toEqual(before.player);
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await session.send('Input.dispatchTouchEvent', {
+      type: 'touchStart',
       touchPoints: [
-        { id: 1, x: arena.x + arena.width * 0.75, y: arena.y + arena.height * 0.6 },
+        { id: 1, x: joystick.x + joystick.width * 0.75, y: joystick.y + joystick.height * 0.1 },
         { id: 2, x: fire.x + fire.width / 2, y: fire.y + fire.height / 2 },
       ],
     });
