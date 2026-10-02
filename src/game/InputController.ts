@@ -11,12 +11,15 @@ const KEY_ACTIONS: Readonly<Record<string, GameAction>> = {
 };
 
 const MOUSE_STEERING_SCALE = 0.8;
+const JOYSTICK_DEAD_ZONE = 0.22;
 
 export class InputController {
   private readonly engine: GameEngine;
   private readonly host: HTMLElement;
   private readonly keys = new Set<string>();
   private readonly pointers = new Map<number, GameAction>();
+  private readonly joystickActions = new Set<GameAction>();
+  private joystickPointer: number | null = null;
   private navigationPointer: number | null = null;
   private readonly unsubscribe: () => void;
   private readonly releases: (() => void)[] = [];
@@ -46,6 +49,30 @@ export class InputController {
 
   releasePointer(pointerId: number): void {
     this.pointers.delete(pointerId);
+    this.sync();
+  }
+
+  beginJoystick(pointerId: number): boolean {
+    if (this.engine.getHud().status !== 'running' || this.joystickPointer !== null) return false;
+    this.joystickPointer = pointerId;
+    this.joystickActions.clear();
+    this.sync();
+    return true;
+  }
+
+  updateJoystick(pointerId: number, horizontal: number, vertical: number): void {
+    if (this.joystickPointer !== pointerId || !Number.isFinite(horizontal) || !Number.isFinite(vertical)) return;
+    this.joystickActions.clear();
+    if (vertical < -JOYSTICK_DEAD_ZONE) this.joystickActions.add('moveForward');
+    if (horizontal < -JOYSTICK_DEAD_ZONE) this.joystickActions.add('turnLeft');
+    else if (horizontal > JOYSTICK_DEAD_ZONE) this.joystickActions.add('turnRight');
+    this.sync();
+  }
+
+  endJoystick(pointerId: number): void {
+    if (this.joystickPointer !== pointerId) return;
+    this.joystickPointer = null;
+    this.joystickActions.clear();
     this.sync();
   }
 
@@ -83,6 +110,8 @@ export class InputController {
   clear(): void {
     this.keys.clear();
     this.pointers.clear();
+    this.joystickActions.clear();
+    this.joystickPointer = null;
     this.navigationPointer = null;
     this.engine.setNavigationTarget(null);
     this.sync();
@@ -143,6 +172,7 @@ export class InputController {
       if (action) actions.add(action);
     });
     this.pointers.forEach((action) => actions.add(action));
+    this.joystickActions.forEach((action) => actions.add(action));
     this.engine.setActions(actions);
   }
 
