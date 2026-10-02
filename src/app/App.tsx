@@ -70,7 +70,7 @@ export function App() {
     <main className="app-shell" ref={mainRef} tabIndex={-1}>
       <header className="site-header">
         <button className="brand" onClick={() => setScreen({ type: 'menu' })} aria-label="Menu principal do Pirate Battle">
-          <span className="brand-mark" aria-hidden="true">PB</span><span><strong>PIRATE</strong> BATTLE</span>
+          <span className="brand-mark" aria-hidden="true"><img src={`${import.meta.env.BASE_URL}pirate-battle-icon.svg`} alt="" /></span><span><strong>PIRATE</strong> BATTLE</span>
         </button>
         {screen.type === 'menu' && <span className="menu-status">ÁGUAS HOSTIS · SOBREVIVA À FROTA</span>}
         <div className="header-meta"><button className="sound-toggle" type="button" aria-pressed={soundEnabled} aria-label="Som" onClick={toggleSound}><span aria-hidden="true">{soundEnabled ? '◖))' : '◖×'}</span>{soundEnabled ? 'SOM ATIVO' : 'SEM SOM'}</button><span className="build-label"><span>CAPITÃO</span>{player.playerName.toUpperCase()}</span></div>

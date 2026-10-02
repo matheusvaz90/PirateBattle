@@ -149,7 +149,7 @@ export function GameScreen({ options, matchId, audio, soundEnabled, onToggleSoun
   return (
     <main className="game-screen">
       <header className="game-header">
-        <div className="game-brand"><span className="brand-mark" aria-hidden="true">PB</span><div><p className="eyebrow">SOBREVIVA À FROTA</p><h1>Pirate Battle</h1></div></div>
+        <div className="game-brand"><span className="brand-mark" aria-hidden="true"><img src={`${import.meta.env.BASE_URL}pirate-battle-icon.svg`} alt="" /></span><div><p className="eyebrow">SOBREVIVA À FROTA</p><h1>Pirate Battle</h1></div></div>
         <div className="header-actions"><button className="sound-toggle game-sound-toggle" type="button" aria-pressed={soundEnabled} aria-label="Som" onClick={onToggleSound}><span aria-hidden="true">{soundEnabled ? '◖))' : '◖×'}</span></button><button className="button compact secondary" disabled={hud.status !== 'running'} onClick={() => engineRef.current?.pause()}>Pausar</button><button className="button compact secondary" aria-label="Menu principal" onClick={onMenu}>Menu</button></div>
       </header>
       <section className="hud" aria-label="Informações da partida">

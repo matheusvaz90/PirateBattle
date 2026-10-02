@@ -17,6 +17,7 @@
   --coral: #ef7b68;
   --purple: #bb86df;
   --line: #315466;
+  --font-interface-rounded: ui-rounded, "Avenir Next Rounded", "SF Pro Rounded", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -34,12 +35,14 @@ h1, h2 { font-family: Georgia, "Times New Roman", serif; }
 p { color: var(--muted); line-height: 1.65; }
 a { color: inherit; }
 
-.app-shell { min-height: 100svh; max-width: 1320px; margin: auto; padding: 26px 52px 40px; position: relative; }
+.app-shell { min-height: 100svh; max-width: 1320px; margin: auto; padding: 26px 52px 40px; position: relative; font-family: var(--font-interface-rounded); font-weight: 600; }
+.app-shell h1, .app-shell h2, .app-shell .eyebrow { font-family: var(--font-interface-rounded); }
 .site-header, .game-header { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
 .site-header { min-height: 58px; border-bottom: 1px solid #31546680; }
 .brand { border: 0; background: none; color: var(--cream); display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; letter-spacing: 2.6px; padding: 0; }
 .brand strong { color: var(--gold); }
-.brand-mark { display: grid; place-items: center; height: 40px; width: 40px; border: 1px solid #f0bd63b8; color: var(--gold); border-radius: 50%; font-size: 11px; font-family: Inter, sans-serif; font-weight: 900; letter-spacing: 0; box-shadow: inset 0 0 0 4px #031b2a, inset 0 0 0 5px #f0bd6340; }
+.brand-mark { display: grid; place-items: center; height: 40px; width: 40px; flex: 0 0 auto; border-radius: 50%; filter: drop-shadow(0 4px 10px #00101880); }
+.brand-mark img { display: block; width: 100%; height: 100%; }
 .menu-status { color: var(--gold); font-size: 8px; font-weight: 900; letter-spacing: 2px; }
 .build-label { color: var(--cream); font-size: 10px; font-weight: 800; letter-spacing: 1.1px; text-align: right; }
 .build-label span { display: block; margin-bottom: 3px; color: var(--cyan); font-size: 8px; }
@@ -82,7 +85,7 @@ a { color: inherit; }
 
 .control-guide { scroll-margin-top: 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 34px 0; display: grid; grid-template-columns: 0.8fr 1.2fr; align-items: center; gap: 60px; }
 .control-guide .eyebrow { margin-bottom: 8px; }
-.control-guide h2 { font-size: 28px; font-weight: 500; margin-bottom: 8px; }
+.control-guide h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 8px; }
 .control-guide p:last-child { font-size: 12px; max-width: 430px; margin: 0; }
 .key-guide { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin: 0; }
 .key-guide div { min-width: 120px; }
@@ -91,7 +94,7 @@ kbd { font-family: inherit; font-size: 10px; font-weight: 800; border: 1px solid
 .menu-footer { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); font-size: 9px; letter-spacing: 0.7px; color: var(--muted); padding-top: 22px; }
 
 .panel { max-width: 680px; margin: 65px auto; padding: 38px; background: linear-gradient(145deg, #0d3244e8, #082535e8); border: 1px solid #446879; border-radius: 6px; box-shadow: 0 24px 80px #00131d99; }
-.panel h1 { font-size: 44px; font-weight: 500; letter-spacing: -1px; }
+.panel h1 { font-size: 44px; font-weight: 800; letter-spacing: -1px; }
 .panel > p { font-size: 13px; }
 .panel label { display: block; margin: 25px 0 9px; font-size: 12px; font-weight: 750; letter-spacing: 0.3px; }
 .panel label span { color: var(--muted); font-size: 11px; font-weight: 400; }
