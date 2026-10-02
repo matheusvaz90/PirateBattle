@@ -141,8 +141,14 @@ kbd { font-family: inherit; font-size: 10px; font-weight: 800; border: 1px solid
 .arena-overlay { position: absolute; inset: 0; z-index: 6; background: #031b2aeb; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; gap: 12px; }
 .arena-overlay h2, .arena-overlay p { margin-bottom: 0; }
 .arena-overlay progress { width: min(260px, 70vw); height: 6px; accent-color: var(--gold); }
-.mobile-command-deck { display: none; flex: 0 0 auto; grid-template-columns: minmax(0, 1fr); gap: 7px; padding: 6px 8px; border: 1px solid #526f7b; border-radius: 5px; background: linear-gradient(180deg, #0d3447, #071f2f); box-shadow: 0 8px 24px #00141f66; }
-.mobile-command-deck.with-special { grid-template-columns: minmax(0, 1fr) 88px; }
+.mobile-command-deck { display: none; flex: 0 0 auto; grid-template-columns: 72px minmax(0, 1fr); align-items: center; gap: 7px; padding: 6px 8px; border: 1px solid #526f7b; border-radius: 5px; background: linear-gradient(180deg, #0d3447, #071f2f); box-shadow: 0 8px 24px #00141f66; }
+.mobile-command-deck.with-special { grid-template-columns: 72px minmax(0, 1fr) 88px; }
+.mobile-joystick { position: relative; width: 64px; height: 64px; justify-self: center; padding: 0 0 11px; border: 0; color: var(--muted); background: transparent; font-size: 6px; font-weight: 900; letter-spacing: 0.6px; text-transform: uppercase; touch-action: none; user-select: none; -webkit-user-select: none; }
+.joystick-base { position: absolute; top: 0; left: 50%; width: 52px; height: 52px; translate: -50% 0; border: 1px solid #6f909d; border-radius: 50%; background: radial-gradient(circle, #163f51 0 35%, #092737 38% 100%); box-shadow: inset 0 0 14px #00141f, 0 3px 10px #00141f99; }
+.joystick-base::before, .joystick-base::after { content: ""; position: absolute; inset: 50% 8px auto; height: 1px; background: #6f909d4d; }
+.joystick-base::after { rotate: 90deg; }
+.joystick-thumb { position: absolute; top: 50%; left: 50%; width: 22px; height: 22px; margin: -11px; border: 1px solid #f8d38e; border-radius: 50%; background: linear-gradient(145deg, #f5c66d, #9c6529); box-shadow: 0 3px 7px #001018cc; will-change: transform; }
+.joystick-caption { position: absolute; right: 0; bottom: 0; left: 0; }
 .touch-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; touch-action: none; }
 .touch-button { min-width: 0; height: 52px; padding: 5px 8px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 0; color: var(--cream); background: center / 100% 100% no-repeat url('/assets/png/retina/ui/menu/button_secondary_normal.png'); font-size: 7px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; text-shadow: 0 2px #06131c; touch-action: none; user-select: none; -webkit-user-select: none; }
 .touch-button img { width: 23px; height: 23px; flex: 0 0 auto; object-fit: contain; }
@@ -251,6 +257,9 @@ th, td { padding: 14px 10px; border-bottom: 1px solid var(--line); }
   .hud-counters > span { min-width: 55px; padding: 5px 7px; }
   .hud-label strong { font-size: 11px; }
   .mobile-command-deck { padding-block: 4px; }
+  .mobile-joystick { width: 54px; height: 54px; }
+  .joystick-base { width: 44px; height: 44px; }
+  .joystick-thumb { width: 20px; height: 20px; margin: -10px; }
   .touch-button { height: 44px; font-size: 6px; }
   .touch-button img { width: 20px; height: 20px; }
   .game-footer { display: none; }
@@ -266,9 +275,10 @@ th, td { padding: 14px 10px; border-bottom: 1px solid var(--line); }
 @media (any-pointer: coarse) and (orientation: portrait) {
   .game-screen { height: auto; min-height: 100svh; padding-bottom: max(8px, env(safe-area-inset-bottom)); }
   .arena-shell { flex: 0 0 auto; width: 100%; min-height: 0; aspect-ratio: 16 / 9; }
-  .mobile-command-deck.with-special { grid-template-columns: minmax(0, 1fr) 76px; }
+  .mobile-command-deck { grid-template-columns: 64px minmax(0, 1fr); }
+  .mobile-command-deck.with-special { grid-template-columns: 64px minmax(0, 1fr) 64px; }
   .touch-controls { gap: 4px; }
-  .touch-button { height: 50px; padding-inline: 5px; gap: 3px; font-size: 6px; }
+  .touch-button { height: 50px; padding-inline: 3px; flex-direction: column; gap: 0; font-size: 6px; }
   .touch-button img { width: 20px; height: 20px; }
   .mobile-orientation-advice { display: block; }
 }

@@ -32,6 +32,7 @@ const STATUS_LABELS: Readonly<Record<GameStatus, string>> = {
 
 export function GameScreen({ options, matchId, audio, soundEnabled, onToggleSound, onComplete, onMenu }: Props) {
   const hostRef = useRef<HTMLDivElement>(null);
+  const joystickThumbRef = useRef<HTMLSpanElement>(null);
   const engineRef = useRef<GameEngine | null>(null);
   const inputRef = useRef<InputController | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -121,27 +122,37 @@ export function GameScreen({ options, matchId, audio, soundEnabled, onToggleSoun
     inputRef.current?.releasePointer(event.pointerId);
   }
 
-  function beginNavigation(event: PointerEvent<HTMLDivElement>) {
-    if (event.pointerType === 'mouse') return;
-    if (!inputRef.current?.beginNavigation(event.pointerId, event.clientX, event.clientY)) return;
-    event.preventDefault();
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }
-
-  function updateNavigation(event: PointerEvent<HTMLDivElement>) {
-    if (event.pointerType === 'mouse') {
-      inputRef.current?.steerWithMouse(event.clientX, event.clientY);
-      return;
-    }
-    inputRef.current?.updateNavigation(event.pointerId, event.clientX, event.clientY);
-  }
-
-  function endNavigation(event: PointerEvent<HTMLDivElement>) {
-    inputRef.current?.endNavigation(event.pointerId);
+  function updateMouseSteering(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === 'mouse') inputRef.current?.steerWithMouse(event.clientX, event.clientY);
   }
 
   function leaveNavigation(event: PointerEvent<HTMLDivElement>) {
     if (event.pointerType === 'mouse') inputRef.current?.clearMouseSteering();
+  }
+
+  function updateJoystick(event: PointerEvent<HTMLButtonElement>) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const padSize = Math.max(1, Math.min(rect.width, rect.height - 12));
+    const horizontalOffset = (event.clientX - (rect.left + rect.width / 2)) / (padSize / 2);
+    const verticalOffset = (event.clientY - (rect.top + padSize / 2)) / (padSize / 2);
+    const length = Math.max(1, Math.hypot(horizontalOffset, verticalOffset));
+    const horizontal = horizontalOffset / length;
+    const vertical = verticalOffset / length;
+    const thumbRange = padSize * 0.24;
+    if (joystickThumbRef.current) joystickThumbRef.current.style.transform = `translate3d(${horizontal * thumbRange}px, ${vertical * thumbRange}px, 0)`;
+    inputRef.current?.updateJoystick(event.pointerId, horizontal, vertical);
+  }
+
+  function beginJoystick(event: PointerEvent<HTMLButtonElement>) {
+    if (!inputRef.current?.beginJoystick(event.pointerId)) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    updateJoystick(event);
+  }
+
+  function endJoystick(event: PointerEvent<HTMLButtonElement>) {
+    inputRef.current?.endJoystick(event.pointerId);
+    if (joystickThumbRef.current) joystickThumbRef.current.style.transform = 'translate3d(0, 0, 0)';
   }
 
   const remaining = `${Math.floor(hud.remainingSeconds / 60)}:${String(hud.remainingSeconds % 60).padStart(2, '0')}`;
@@ -162,11 +173,14 @@ export function GameScreen({ options, matchId, audio, soundEnabled, onToggleSoun
         </div>
       </section>
       <section className="arena-shell" aria-label="Arena do jogo">
-        <div className="arena-host" ref={hostRef} tabIndex={0} role="group" aria-label="No computador, mova o mouse para guiar e segure W para avançar. No celular, segure e arraste para navegar. Espaço, Q e E disparam; R usa o especial e Escape pausa." data-testid="arena" onPointerDown={beginNavigation} onPointerMove={updateNavigation} onPointerLeave={leaveNavigation} onPointerUp={endNavigation} onPointerCancel={endNavigation} onLostPointerCapture={endNavigation} onContextMenu={(event) => event.preventDefault()} />
+        <div className="arena-host" ref={hostRef} tabIndex={0} role="group" aria-label="No computador, mova o mouse para guiar e segure W para avançar. No celular, use o joystick abaixo da arena. Espaço, Q e E disparam; R usa o especial e Escape pausa." data-testid="arena" onPointerMove={updateMouseSteering} onPointerLeave={leaveNavigation} onContextMenu={(event) => event.preventDefault()} />
         {loading && <div className="arena-overlay" role="status"><p className="eyebrow">PREPARANDO SUA VIAGEM</p><h2>Carregando o mar…</h2><progress value={progress} max={100} aria-label="Progresso do carregamento dos recursos" /><span>{progress}%</span></div>}
         {error && <div className="arena-overlay"><h2>Não foi possível zarpar</h2><p role="alert">{error}</p><button className="button primary" onClick={retry}>Tentar novamente</button></div>}
       </section>
-      <div className={`mobile-command-deck${options.specialAttackEnabled ? ' with-special' : ''}`} role="group" aria-label="Controles de ataque por toque">
+      <div className={`mobile-command-deck${options.specialAttackEnabled ? ' with-special' : ''}`} role="group" aria-label="Controles do navio por toque">
+        <button className="mobile-joystick" type="button" disabled={hud.status !== 'running'} aria-label="Joystick de navegação. Arraste para cima para avançar e para os lados para virar." data-testid="mobile-joystick" onPointerDown={beginJoystick} onPointerMove={(event) => { if (event.currentTarget.hasPointerCapture(event.pointerId)) updateJoystick(event); }} onPointerUp={endJoystick} onPointerCancel={endJoystick} onLostPointerCapture={endJoystick} onContextMenu={(event) => event.preventDefault()}>
+          <span className="joystick-base" aria-hidden="true"><span className="joystick-thumb" ref={joystickThumbRef} /></span><span className="joystick-caption">Navegar</span>
+        </button>
         <div className="touch-controls">
           {ATTACK_CONTROLS.map(({ action, label, accessibleLabel, icon }) => <button key={action} className="touch-button attack-button" disabled={hud.status !== 'running'} aria-label={accessibleLabel} onPointerDown={(event) => press(event, action)} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release} onContextMenu={(event) => event.preventDefault()}><img src={`${import.meta.env.BASE_URL}assets/png/retina/ui/controls/${icon}`} alt="" aria-hidden="true" />{label}</button>)}
         </div>
