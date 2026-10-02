@@ -378,6 +378,6 @@ Execução/evidências no navegador, PNGs revisados/versionados, resultados reai
 
 ## Recursos e arquitetura
 
-Os recursos fornecidos ficam em `public/assets/`. Consulte [a procedência dos recursos](public/assets/ASSET_SOURCES.md) para ver a origem e a situação das licenças. Nenhuma licença dos recursos é inferida pelo fato de o repositório ser público.
+O código original deste projeto é distribuído sob a [licença MIT](LICENSE). Os recursos fornecidos ficam em `public/assets/` e não são cobertos por essa licença; consulte [a procedência dos recursos](public/assets/ASSET_SOURCES.md) para ver a origem e a situação das licenças. Nenhuma licença dos recursos é inferida pelo fato de o repositório ser público.
 
 Consulte [ARCHITECTURE.md](ARCHITECTURE.md) para ver a separação entre engine/renderização, tempo, entrada, propriedade de recursos e integração de dados planejada.
