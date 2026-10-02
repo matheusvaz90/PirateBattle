@@ -28,7 +28,7 @@ test('entering and abandoning sessions does not duplicate canvases', async ({ pa
     await page.getByRole('button', { name: 'Menu principal', exact: true }).click();
     await expect(page.locator('canvas')).toHaveCount(0);
   }
-  await expect(page.getByRole('button', { name: 'Ver último resultado' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Último resultado', exact: true })).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 
