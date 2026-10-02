@@ -12,18 +12,26 @@ interface EnemyVisual {
 
 export const GAME_ASSETS = {
   ship: 'png/default/ships/ship_5.png',
+  damagedShip: 'png/default/ships/ship_11.png',
+  criticalShip: 'png/default/ships/ship_17.png',
+  chaser: 'png/default/ships/ship_3.png',
+  damagedChaser: 'png/default/ships/ship_9.png',
+  criticalChaser: 'png/default/ships/ship_15.png',
+  shooter: 'png/default/ships/ship_2.png',
+  damagedShooter: 'png/default/ships/ship_8.png',
+  criticalShooter: 'png/default/ships/ship_14.png',
   water: 'png/retina/tiles/tile_73.png',
   sand: 'png/retina/tiles/tile_1.png',
   rock: 'png/retina/tiles/tile_50.png',
   heart: 'png/retina/ui/hud/icon_heart.png',
   projectile: 'png/default/ship_parts/cannon_ball.png',
   burst: 'png/default/effects/explosion_3.png',
-  damagedShip: 'png/default/ships/ship_23.png',
-  criticalShip: 'png/default/ships/ship_24.png',
-  chaser: 'png/default/ships/ship_9.png',
-  shooter: 'png/default/ships/ship_2.png',
-  damagedEnemy: 'png/default/ships/ship_21.png',
   destruction: 'png/default/effects/explosion_1.png',
+} as const;
+
+const ENEMY_TEXTURES = {
+  chaser: { healthy: 'chaser', damaged: 'damagedChaser', critical: 'criticalChaser' },
+  shooter: { healthy: 'shooter', damaged: 'damagedShooter', critical: 'criticalShooter' },
 } as const;
 
 export class GameRenderer {
@@ -248,9 +256,10 @@ export class GameRenderer {
         this.enemyLayer.addChild(ship, healthBar);
         this.enemyVisuals.set(enemy.id, visual);
       }
+      const textures = ENEMY_TEXTURES[enemy.kind];
       visual.ship.position.set(enemy.x, enemy.y);
       visual.ship.rotation = enemy.heading - Math.PI / 2;
-      visual.ship.texture = this.getShipTexture(enemy, enemy.kind, 'damagedEnemy', 'criticalShip');
+      visual.ship.texture = this.getShipTexture(enemy, textures.healthy, textures.damaged, textures.critical);
       visual.ship.tint = enemy.damageFlash > 0 ? 0xffa899 : 0xffffff;
       visual.healthBar.position.set(enemy.x, enemy.y - 54);
       if (visual.health !== enemy.health) {
