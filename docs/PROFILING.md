@@ -17,6 +17,22 @@ Abra **http://localhost:4173/?profile=1**. Sem esse parâmetro, o coletor não c
 
 Defina o cenário de rede como Sucesso. Use uma viewport estável e mantenha o navegador em primeiro plano. Registre CPU, RAM, GPU, sistema operacional, versão do navegador, viewport, taxa de atualização da tela, extensões e condições de energia. A exportação captura user agent, modo do build, configuração, viewport/DPR iniciais e o último tamanho/resolução do canvas e de seu backing buffer. Os detalhes do hardware devem ser fornecidos manualmente.
 
+## Renderizações do React
+
+O flamegraph de componentes exige o React DevTools e deve ser gravado pelo usuário em um build de desenvolvimento. Ele serve para identificar propriedade e motivo das renderizações, não para comparar tempos absolutos com produção. O Strict Mode pode repetir inicializações e efeitos no desenvolvimento; diferencie essa verificação deliberada de atualizações que continuam depois da montagem.
+
+1. Execute `npm run dev`, abra `http://localhost:5173` e selecione a aba **Profiler** do React DevTools.
+2. Ative o registro do motivo de cada renderização quando essa opção estiver disponível.
+3. Grave separadamente a abertura do menu até ranking e API estabilizarem.
+4. Grave a troca entre Ranking e Histórico, uma paginação, uma atualização e uma mudança de cenário de rede.
+5. Grave 15–20 segundos de gameplay com joystick ou mouse, canhões, uma pausa e uma retomada.
+6. Grave a conclusão de uma partida e a transição de registro entre envio, confirmação ou erro recuperável.
+7. Exporte cada gravação com nomes que identifiquem o cenário e preserve os arquivos junto às demais evidências.
+
+Movimento do ponteiro, frames do PixiJS e arrasto do joystick não devem gerar commits React por frame. Durante a partida são esperadas atualizações quando muda o segundo exibido, vida, pontuação, carga do especial, estado, carregamento ou erro. Investigue primeiro renderizações de `App` e consumidores não relacionados quando apenas pendências ou rede mudarem; depois avalie `GameScreen` se os commits limitados ao HUD apresentarem duração relevante.
+
+Use a aba **Performance** do Chromium no build otimizado para complementar o flamegraph com custo real da thread principal, layout, pintura, tarefas longas e trabalho do PixiJS. Não aplique `memo`, `useMemo`, `useCallback` ou divisão de contexto apenas por contagem: compare duração, frequência e motivo antes e depois de cada otimização.
+
 ## Medição de combate de três minutos
 
 1. Em Opções, salve uma sessão de **180 segundos** e documente o intervalo de surgimento. O padrão é 4 segundos; intervalos menores podem fornecer uma configuração de estresse separada.
